@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CallScheduler.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,7 @@ namespace CallScheduler
     {
         public MainWindow()
         {
+            DataContext = new MainModel();
             InitializeComponent();
         }
     }

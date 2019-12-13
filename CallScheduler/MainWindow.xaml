@@ -38,19 +38,19 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Label x:Name="lblTargetName" Grid.Column="0" Grid.Row="0">고객명</Label>
-            <Label x:Name="lblTargetPhoneNumber" Grid.Column="0" Grid.Row="1">고객 전화번호</Label>
-            <Label x:Name="lblTimerSet" Grid.Column="0" Grid.Row="2">시간 설정</Label>
-            <Label x:Name="lblMemo" Grid.Column="0" Grid.Row="3">메모</Label>
-            <TextBox x:Name="tbTargetName" Grid.Column="1" Grid.Row="0"></TextBox>
-            <TextBox x:Name="tbTargetPhoneNumber" Grid.Column="1" Grid.Row="1"></TextBox>
-            <TextBox x:Name="tbTimerSet" Grid.Column="1" Grid.Row="2"></TextBox>
-            <TextBox x:Name="tbMemo" Grid.Column="1" Grid.Row="3"></TextBox>
+            <Label x:Name="lblTargetName" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">고객명</Label>
+            <Label x:Name="lblTargetPhoneNumber" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">고객 전화번호</Label>
+            <Label x:Name="lblTimerSet" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">알람 시간</Label>
+            <Label x:Name="lblMemo" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">메모</Label>
+            <TextBox x:Name="tbTargetName" Grid.Column="1" Grid.Row="0" Text="{Binding Name}"/>
+            <TextBox x:Name="tbTargetPhoneNumber" Grid.Column="1" Grid.Row="1" Text="{Binding PhoneNumber}"/>
+            <TextBox x:Name="tbTimerSet" Grid.Column="1" Grid.Row="2" Text="{Binding AlarmTime}"/>
+            <TextBox x:Name="tbMemo" Grid.Column="1" Grid.Row="3" Text="{Binding Memo}"/>
         </Grid>
 
         <Grid Grid.Row="2">
-            <GroupBox>
-                
+            <GroupBox Header="&lt;고객명단&gt;" FontSize="20">
+                <ListView x:Name="lvGuestList"></ListView>
             </GroupBox>
         </Grid>
     </Grid>
