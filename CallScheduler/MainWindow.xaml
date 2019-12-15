@@ -24,6 +24,7 @@
             <Button x:Name="btnNewAlarm" Grid.Column="0" Command="">새 알람</Button>
             <Button x:Name="btnAlarmEdit" Grid.Column="1" Command="">알람 수정</Button>
             <Button x:Name="btnAlarmDelete" Grid.Column="2" Command="">알람 삭제</Button>
+            <Button x:Name="btn" Grid.Column="3" Command="">알람 저장</Button>
         </Grid>
 
         <Grid Grid.Row="1" Margin="10,10,10,10">
@@ -50,7 +51,16 @@
 
         <Grid Grid.Row="2">
             <GroupBox Header="&lt;고객명단&gt;" FontSize="20">
-                <ListView x:Name="lvGuestList"></ListView>
+                <ListView x:Name="lvGuestList">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="colName" Width="60" DisplayMemberBinding="{Binding Name}"/>
+                            <GridViewColumn Header="colPhoneNumber" Width="60" DisplayMemberBinding="{Binding PhoneNumber}"/>
+                            <GridViewColumn Header="colAlarmTime" Width="60" DisplayMemberBinding="{Binding AlarmTime}"/>
+                            <GridViewColumn Header="colMemo" Width="60" DisplayMemberBinding="{Binding Memo}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </GroupBox>
         </Grid>
     </Grid>

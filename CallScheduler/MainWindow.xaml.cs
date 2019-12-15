@@ -21,10 +21,16 @@ namespace CallScheduler
     /// </summary>
     public partial class MainWindow : Window
     {
+        private List<MainModel> liGuest;
+
         public MainWindow()
         {
             DataContext = new MainModel();
             InitializeComponent();
+
+            liGuest = new List<MainModel>();
         }
+
+
     }
 }
