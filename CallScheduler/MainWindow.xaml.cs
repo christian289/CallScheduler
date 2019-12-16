@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
 
 namespace CallScheduler
 {
@@ -21,16 +22,18 @@ namespace CallScheduler
     /// </summary>
     public partial class MainWindow : Window
     {
-        private List<MainModel> liGuest;
+        private XmlDocument xml { get; set; }
+        private MainModel _MainModel { get; set; }
 
         public MainWindow()
         {
-            DataContext = new MainModel();
+            xml = new XmlDocument();
+            _MainModel = new MainModel();
+            DataContext = _MainModel;
+
             InitializeComponent();
 
-            liGuest = new List<MainModel>();
+            lvGuestList.ItemsSource = _MainModel.Model;
         }
-
-
     }
 }

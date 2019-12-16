@@ -78,9 +78,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Global\DataXML.cs" />
     <Compile Include="Helper\ConversionHelper.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Model\CommandBase.cs" />
+    <Compile Include="Model\DataModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\MainModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -127,7 +129,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="NewFolder1\" />
+    <Resource Include="Data.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -10,6 +10,7 @@ namespace CallScheduler.Model
     {
         private readonly Func<bool> canExecute;
         private readonly Action execute;
+        private readonly Action<string> execute_strParam1;
 
         /// <summary>
         /// Initializes a new instance of the DelegateCommand class.
@@ -29,6 +30,11 @@ namespace CallScheduler.Model
             this.execute = execute;
             this.canExecute = canExecute;
         }
+
+        public CommandBase(Action<string> execute_strParam1)
+        {
+        }
+
         /// <summary>
         /// can executes event handler
         /// </summary>

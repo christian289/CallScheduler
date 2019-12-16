@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CallScheduler.Global;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,54 +11,77 @@ namespace CallScheduler.Model
 {
     public class MainModel : ModelBase
     {
-        private string _Name = string.Empty;
-
-        public string Name
+        private enum CRUDmode
         {
-            get => _Name;
+            Create,
+            Read,
+            Update,
+            Delete
+        }
+
+        #region 수정 모드 Flag
+        private bool _IsEditorMode = false;
+
+        public bool IsEditorMode
+        {
+            get => _IsEditorMode;
             set
             {
-                _Name = value;
+                _IsEditorMode = value;
                 OnPropertyChanged();
             }
         }
+        #endregion
 
-        private string _PhoneNumber = string.Empty;
+        #region XML 데이터 파일 경로
+        private string _SourceFilePath = string.Empty;
 
-        public string PhoneNumber
+        /// <summary>
+        /// 
+        /// </summary>
+        public string SourceFilePath
         {
-            get => _PhoneNumber;
+            get => _SourceFilePath;
             set
             {
-                _PhoneNumber = value;
+                _SourceFilePath = value;
                 OnPropertyChanged();
             }
         }
+        #endregion
 
-        private string _AlarmTime = string.Empty;
+        #region 알람 수정 버튼명
+        private string _ButtonName = "알람 수정";
 
-        public string AlarmTime
+        public string ButtonName
         {
-            get => _AlarmTime;
+            get => _ButtonName;
             set
             {
-                _AlarmTime = value;
+                _ButtonName = value;
                 OnPropertyChanged();
             }
         }
+        #endregion
 
-        private string _Memo = string.Empty;
+        private ObservableCollection<DataModel> _Model = new ObservableCollection<DataModel>();
 
-        public string Memo
+        public ObservableCollection<DataModel> Model
         {
-            get => _Memo;
-            set
+            get
             {
-                _Memo = value;
-                OnPropertyChanged();
+                return _Model;
             }
         }
 
+        public MainModel()
+        {
+            // WPF에서 MVVM Pattern을 사용하면
+            // 프로그램 시작 시 XAML에서 Binding Property를 사용하기 때문에 초기화를
+            // 생성자가 아닌 맴버변수에 해주는게 좋다.
+        }
+
+        #region 알람 추가
         private ICommand _NewCommand;
 
         public ICommand NewCommand
@@ -69,10 +94,11 @@ namespace CallScheduler.Model
 
         private void New()
         {
-            
+            Model.Add(new DataModel());
         }
+        #endregion
 
-
+        #region 알람 수정
         private ICommand _EditCommand;
 
         public ICommand EditCommand
@@ -85,9 +111,20 @@ namespace CallScheduler.Model
 
         private void Edit()
         {
-
+            if (IsEditorMode) // 수정 모드
+            {
+                ButtonName = "알람 수정";
+                IsEditorMode = false;
+            }
+            else // 비 수정 모드
+            {
+                ButtonName = "수정 완료";
+                IsEditorMode = true;
+            }
         }
+        #endregion
 
+        #region 알람 삭제
         private ICommand _DeleteCommand;
 
         public ICommand DeleteCommand
@@ -102,7 +139,9 @@ namespace CallScheduler.Model
         {
 
         }
+        #endregion
 
+        #region 알람 저장
         private ICommand _SaveCommand;
 
         public ICommand SaveCommand
@@ -113,9 +152,10 @@ namespace CallScheduler.Model
             }
         }
 
-        private void Save()
+        private void Save(string FilePath)
         {
-
+            DataXML.XmlSave(new List<DataModel>(Model), FilePath);
         }
+        #endregion
     }
 }
