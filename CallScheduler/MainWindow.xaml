@@ -21,17 +21,22 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="btnNew" Grid.Column="0" Content="새 알람"
+            <Button x:Name="btnNew" Grid.Column="0"
+                    Content="{Binding AddButtonName}"
                     Command="{Binding NewCommand}"
-                    IsEnabled="{Binding IsEditorMode}"/>
-            <Button x:Name="btnEdit" Grid.Column="1" Content="{Binding ButtonName}"
-                    Command="{Binding EditCommand}"/>
-            <Button x:Name="btnDelete" Grid.Column="2" Content="알람 삭제"
+                    IsEnabled="{Binding NewButtonController}"/>
+            <Button x:Name="btnEdit" Grid.Column="1"
+                    Content="{Binding EditButtonName}"
+                    Command="{Binding EditCommand}"
+                    IsEnabled="{Binding EditButtonController}"/>
+            <Button x:Name="btnDelete" Grid.Column="2"
+                    Content="알람 삭제"
                     Command="{Binding DeleteCommand}"
-                    IsEnabled="{Binding IsEditorMode}"/>
-            <Button x:Name="btnSave" Grid.Column="3" Content="알람 저장"
+                    IsEnabled="{Binding DeleteButtonController}"/>
+            <Button x:Name="btnSave" Grid.Column="3"
+                    Content="알람 저장"
                     Command="{Binding SaveCommand}" CommandParameter="{Binding SourceFilePath}"
-                    IsEnabled="{Binding IsEditorMode}"/>
+                    IsEnabled="{Binding SaveButtonController}"/>
         </Grid>
 
         <Grid Grid.Row="1" Margin="10,10,10,10">
@@ -65,32 +70,34 @@
             <TextBox x:Name="tbTargetName" Grid.Column="1" Grid.Row="0" 
                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                     Text="{Binding SelectedItem.Name, ElementName=lvGuestList}" 
-                     IsEnabled="{Binding IsEditorMode}"
+                     Text="{Binding SelectedItem.Name, ElementName=lvGuestList, Mode=TwoWay}" 
+                     IsEnabled="{Binding NameTextboxController}"
                      FontSize="18"/>
             <TextBox x:Name="tbTargetPhoneNumber" Grid.Column="1" Grid.Row="1" 
                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                     Text="{Binding SelectedItem.PhoneNumber, ElementName=lvGuestList}" 
-                     IsEnabled="{Binding IsEditorMode}"
+                     Text="{Binding SelectedItem.PhoneNumber, ElementName=lvGuestList, Mode=TwoWay}" 
+                     IsEnabled="{Binding PhoneNumberTextboxController}"
                      FontSize="18"/>
             <TextBox x:Name="tbTimerSet" Grid.Column="1" Grid.Row="2" 
                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                     Text="{Binding SelectedItem.AlarmTime, ElementName=lvGuestList}" 
-                     IsEnabled="{Binding IsEditorMode}"
+                     Text="{Binding SelectedItem.AlarmTime, ElementName=lvGuestList, Mode=TwoWay}" 
+                     IsEnabled="{Binding AlarmTimeTextboxController}"
                      FontSize="18"/>
             <TextBox x:Name="tbMemo" Grid.Column="1" Grid.Row="3" 
                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                     Text="{Binding SelectedItem.Memo, ElementName=lvGuestList}" 
-                     IsEnabled="{Binding IsEditorMode}"
+                     Text="{Binding SelectedItem.Memo, ElementName=lvGuestList, Mode=TwoWay}" 
+                     IsEnabled="{Binding MemoTextboxController}"
                      FontSize="18"/>
         </Grid>
 
         <Grid Grid.Row="2">
             <GroupBox Header="&lt;고객명단&gt;" FontSize="20">
-                <ListView x:Name="lvGuestList" FontSize="14" ItemContainerStyle="{StaticResource BorderedItem}">
+                <ListView x:Name="lvGuestList" FontSize="14"
+                          ItemsSource="{Binding Model}"
+                          SelectedItem="{Binding LvModel.SelectedItem}">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn x:Name="colName" Header="이름" 

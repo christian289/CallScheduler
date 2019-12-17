@@ -83,6 +83,7 @@
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Model\CommandBase.cs" />
     <Compile Include="Model\DataModel.cs" />
+    <Compile Include="Model\ListViewModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\MainModel.cs" />
     <Compile Include="MainWindow.xaml.cs">

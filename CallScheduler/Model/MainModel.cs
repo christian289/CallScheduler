@@ -11,7 +11,108 @@ namespace CallScheduler.Model
 {
     public class MainModel : ModelBase
     {
-        private enum CRUDmode
+        #region 버튼 컨트롤러
+        private bool _NewButtonController = true;
+
+        public bool NewButtonController
+        {
+            get => _NewButtonController;
+            set
+            {
+                _NewButtonController = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _EditButtonController = true;
+
+        public bool EditButtonController
+        {
+            get => _EditButtonController;
+            set
+            {
+                _EditButtonController = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _DeleteButtonController = true;
+
+        public bool DeleteButtonController
+        {
+            get => _DeleteButtonController;
+            set
+            {
+                _DeleteButtonController = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _SaveButtonController = true;
+
+        public bool SaveButtonController
+        {
+            get => _SaveButtonController;
+            set
+            {
+                _SaveButtonController = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region 텍스트 박스 컨트롤러
+        private bool _NameTextboxController = false;
+
+        public bool NameTextboxController
+        {
+            get => _NameTextboxController;
+            set
+            {
+                _NameTextboxController = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _PhoneNumberTextboxController = false;
+
+        public bool PhoneNumberTextboxController
+        {
+            get => _PhoneNumberTextboxController;
+            set
+            {
+                _PhoneNumberTextboxController = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _AlarmTimeTextboxController = false;
+
+        public bool AlarmTimeTextboxController
+        {
+            get => _AlarmTimeTextboxController;
+            set
+            {
+                _AlarmTimeTextboxController = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _MemoTextboxController = false;
+
+        public bool MemoTextboxController
+        {
+            get => _MemoTextboxController;
+            set
+            {
+                _MemoTextboxController = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region 수정 모드 Flag
+        public enum CRUDmode
         {
             Create,
             Read,
@@ -19,15 +120,52 @@ namespace CallScheduler.Model
             Delete
         }
 
-        #region 수정 모드 Flag
-        private bool _IsEditorMode = false;
+        private CRUDmode _Mode = CRUDmode.Read;
 
-        public bool IsEditorMode
+        public CRUDmode Mode
         {
-            get => _IsEditorMode;
+            get => _Mode;
             set
             {
-                _IsEditorMode = value;
+                _Mode = value;
+
+                switch (_Mode)
+                {
+                    case CRUDmode.Create:
+                        NewButtonController = true;
+                        EditButtonController = false;
+                        DeleteButtonController = false;
+                        SaveButtonController = false;
+                        NameTextboxController = true;
+                        PhoneNumberTextboxController = true;
+                        AlarmTimeTextboxController = true;
+                        MemoTextboxController = true;
+                        break;
+                    case CRUDmode.Read:
+                        NewButtonController = true;
+                        EditButtonController = true;
+                        DeleteButtonController = true;
+                        SaveButtonController = true;
+                        NameTextboxController = false;
+                        PhoneNumberTextboxController = false;
+                        AlarmTimeTextboxController = false;
+                        MemoTextboxController = false;
+                        break;
+                    case CRUDmode.Update:
+                        NewButtonController = false;
+                        EditButtonController = true;
+                        DeleteButtonController = false;
+                        SaveButtonController = false;
+                        NameTextboxController = true;
+                        PhoneNumberTextboxController = true;
+                        AlarmTimeTextboxController = true;
+                        MemoTextboxController = true;
+                        break;
+                    case CRUDmode.Delete:
+                        // 작업 없음.
+                        break;
+                }
+
                 OnPropertyChanged();
             }
         }
@@ -36,9 +174,6 @@ namespace CallScheduler.Model
         #region XML 데이터 파일 경로
         private string _SourceFilePath = string.Empty;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string SourceFilePath
         {
             get => _SourceFilePath;
@@ -50,29 +185,37 @@ namespace CallScheduler.Model
         }
         #endregion
 
-        #region 알람 수정 버튼명
-        private string _ButtonName = "알람 수정";
+        #region 알람 추가 버튼명
+        private string _AddButtonName = "알람 추가";
 
-        public string ButtonName
+        public string AddButtonName
         {
-            get => _ButtonName;
+            get => _AddButtonName;
             set
             {
-                _ButtonName = value;
+                _AddButtonName = value;
                 OnPropertyChanged();
             }
         }
         #endregion
 
-        private ObservableCollection<DataModel> _Model = new ObservableCollection<DataModel>();
+        #region 알람 수정 버튼명
+        private string _EditButtonName = "알람 수정";
 
-        public ObservableCollection<DataModel> Model
+        public string EditButtonName
         {
-            get
+            get => _EditButtonName;
+            set
             {
-                return _Model;
+                _EditButtonName = value;
+                OnPropertyChanged();
             }
         }
+        #endregion
+
+        public ObservableCollection<DataModel> Model { get; } = new ObservableCollection<DataModel>();
+
+        public ListViewModel LvModel { get; set; } = new ListViewModel();
 
         public MainModel()
         {
@@ -94,7 +237,21 @@ namespace CallScheduler.Model
 
         private void New()
         {
-            Model.Add(new DataModel());
+            if (Mode.Equals(CRUDmode.Read))
+            {
+                AddButtonName = "추가 완료";
+                Mode = CRUDmode.Create;
+
+                DataModel obj = new DataModel();
+                Model.Add(obj);
+                LvModel.SelectedItem = obj;
+                LvModel.SelectedIndexNumber = Model.IndexOf(obj) + 1;
+            }
+            else
+            {
+                AddButtonName = "알람 추가";
+                Mode = CRUDmode.Read;
+            }
         }
         #endregion
 
@@ -111,15 +268,15 @@ namespace CallScheduler.Model
 
         private void Edit()
         {
-            if (IsEditorMode) // 수정 모드
+            if (Mode.Equals(CRUDmode.Read))
             {
-                ButtonName = "알람 수정";
-                IsEditorMode = false;
+                EditButtonName = "수정 완료";
+                Mode = CRUDmode.Update;
             }
-            else // 비 수정 모드
+            else
             {
-                ButtonName = "수정 완료";
-                IsEditorMode = true;
+                EditButtonName = "알람 수정";
+                Mode = CRUDmode.Read;
             }
         }
         #endregion
@@ -137,7 +294,10 @@ namespace CallScheduler.Model
 
         private void Delete()
         {
-
+            if (LvModel.SelectedItem != null)
+            {
+                Model.Remove(LvModel.SelectedItem as DataModel);
+            }
         }
         #endregion
 

@@ -13,7 +13,7 @@ namespace CallScheduler.Model
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if (propertyName != null)
+            if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
