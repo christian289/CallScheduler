@@ -1,6 +1,7 @@
 ﻿using CallScheduler.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,8 @@ namespace CallScheduler
             DataContext = _MainModel;
 
             InitializeComponent();
+
+            _MainModel.SourceFilePath = Directory.GetCurrentDirectory() + @"\Data.xml";
         }
     }
 }

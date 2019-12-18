@@ -213,8 +213,14 @@ namespace CallScheduler.Model
         }
         #endregion
 
+        /// <summary>
+        /// 고객명단
+        /// </summary>
         public ObservableCollection<DataModel> Model { get; } = new ObservableCollection<DataModel>();
 
+        /// <summary>
+        /// 고객명단 보조
+        /// </summary>
         public ListViewModel LvModel { get; set; } = new ListViewModel();
 
         public MainModel()
