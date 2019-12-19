@@ -213,10 +213,19 @@ namespace CallScheduler.Model
         }
         #endregion
 
-        /// <summary>
-        /// 고객명단
-        /// </summary>
-        public ObservableCollection<DataModel> Model { get; } = new ObservableCollection<DataModel>();
+        #region 고객명단
+        private ObservableCollection<DataModel> _Model = new ObservableCollection<DataModel>();
+
+        public ObservableCollection<DataModel> Model
+        {
+            get => _Model;
+            set
+            {
+                _Model = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
 
         /// <summary>
         /// 고객명단 보조
@@ -237,7 +246,13 @@ namespace CallScheduler.Model
         {
             get
             {
-                return _NewCommand ?? (_NewCommand = new CommandBase(New));
+                //일반적인 바인딩
+                //return _NewCommand ?? (_NewCommand = new CommandBase(New));
+
+                //return _NewCommand ?? (_NewCommand = new CommandBase<object>(
+                //    param => New(), param => CanExecute_New(), false));
+
+                return _NewCommand ?? (_NewCommand = new CommandBase(New, CanExecute_New, false));
             }
         }
 
@@ -257,7 +272,14 @@ namespace CallScheduler.Model
             {
                 AddButtonName = "알람 추가";
                 Mode = CRUDmode.Read;
+
+                // 추가 완료 메세지박스
             }
+        }
+
+        private bool CanExecute_New()
+        {
+            return true;
         }
         #endregion
 
@@ -268,7 +290,12 @@ namespace CallScheduler.Model
         {
             get
             {
-                return _EditCommand ?? (_EditCommand = new CommandBase(Edit));
+                //return _EditCommand ?? (_EditCommand = new CommandBase(Edit));
+
+                //return _EditCommand ?? (_EditCommand = new CommandBase<object>(
+                //    param => Edit(), param => CanExecute_Edit(), true));
+
+                return _EditCommand ?? (_EditCommand = new CommandBase(Edit, CanExecute_Edit, true));
             }
         }
 
@@ -283,7 +310,14 @@ namespace CallScheduler.Model
             {
                 EditButtonName = "알람 수정";
                 Mode = CRUDmode.Read;
+
+                // 수정 완료 메세지박스
             }
+        }
+
+        private bool CanExecute_Edit()
+        {
+            return true;
         }
         #endregion
 
@@ -294,16 +328,28 @@ namespace CallScheduler.Model
         {
             get
             {
-                return _DeleteCommand ?? (_DeleteCommand = new CommandBase(Delete));
+                //return _DeleteCommand ?? (_DeleteCommand = new CommandBase(Delete));
+
+                //return _DeleteCommand ?? (_DeleteCommand = new CommandBase<object>(
+                //    param => Delete(), param => CanExecute_Delete(), true));
+
+                return _DeleteCommand ?? (_DeleteCommand = new CommandBase(Delete, CanExecute_Delete, true));
             }
         }
 
         private void Delete()
         {
+            // 정말 삭제하겠는지 묻는 메세지 박스
+
             if (LvModel.SelectedItem != null)
             {
                 Model.Remove(LvModel.SelectedItem as DataModel);
             }
+        }
+
+        private bool CanExecute_Delete()
+        {
+            return true;
         }
         #endregion
 
@@ -314,13 +360,28 @@ namespace CallScheduler.Model
         {
             get
             {
-                return _SaveCommand ?? (_SaveCommand = new CommandBase(Save));
+                //return _SaveCommand ?? (_SaveCommand = new CommandBase(Save));
+
+                return _SaveCommand ?? (_SaveCommand = new CommandBase<string>(
+                    param => Save(SourceFilePath), param => CanExecute_Save(), true));
             }
         }
 
         private void Save(string FilePath)
         {
-            DataXML.XmlSave(new List<DataModel>(Model), FilePath);
+            if (DataXML.XmlSave(new List<DataModel>(Model), FilePath))
+            {
+                // 저장완료 메세지 박스
+            }
+            else
+            {
+                // 저장실패 메세지 박스
+            }
+        }
+
+        private bool CanExecute_Save()
+        {
+            return true;
         }
         #endregion
     }

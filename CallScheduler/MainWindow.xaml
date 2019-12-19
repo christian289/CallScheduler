@@ -5,113 +5,139 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CallScheduler"
         mc:Ignorable="d"
-        Title="MainWindow" Height="900" Width="300">
+        Title="오리멍게 알람" Height="900" Width="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="200"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="200"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-            <Button x:Name="btnNew" Grid.Column="0"
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="btnNew" Grid.Column="0"
                     Content="{Binding AddButtonName}"
                     Command="{Binding NewCommand}"
                     IsEnabled="{Binding NewButtonController}"/>
-            <Button x:Name="btnEdit" Grid.Column="1"
+                <Button x:Name="btnEdit" Grid.Column="1"
                     Content="{Binding EditButtonName}"
                     Command="{Binding EditCommand}"
                     IsEnabled="{Binding EditButtonController}"/>
-            <Button x:Name="btnDelete" Grid.Column="2"
+                <Button x:Name="btnDelete" Grid.Column="2"
                     Content="알람 삭제"
                     Command="{Binding DeleteCommand}"
                     IsEnabled="{Binding DeleteButtonController}"/>
-            <Button x:Name="btnSave" Grid.Column="3"
+                <Button x:Name="btnSave" Grid.Column="3"
                     Content="알람 저장"
                     Command="{Binding SaveCommand}" CommandParameter="{Binding SourceFilePath}"
                     IsEnabled="{Binding SaveButtonController}"/>
-        </Grid>
+            </Grid>
 
-        <Grid Grid.Row="1" Margin="10,10,10,10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
+            <Grid Grid.Row="1" Margin="10,10,10,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
 
-            <Label x:Name="lblTargetName" Grid.Column="0" Grid.Row="0" 
+                <Label x:Name="lblTargetName" Grid.Column="0" Grid.Row="0" 
                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                    Content="고객명" FontSize="18"/>
-            <Label x:Name="lblTargetPhoneNumber" Grid.Column="0" Grid.Row="1" 
+                <Label x:Name="lblTargetPhoneNumber" Grid.Column="0" Grid.Row="1" 
                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                    Content="고객 전화번호" FontSize="18"/>
-            <Label x:Name="lblTimerSet" Grid.Column="0" Grid.Row="2" 
+                <Label x:Name="lblTimerSet" Grid.Column="0" Grid.Row="2" 
                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                    Content="알람 시간" FontSize="18"/>
-            <Label x:Name="lblMemo" Grid.Column="0" Grid.Row="3" 
+                <Label x:Name="lblMemo" Grid.Column="0" Grid.Row="3" 
                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                    Content="메모" FontSize="18"/>
-            <TextBox x:Name="tbTargetName" Grid.Column="1" Grid.Row="0" 
+                <TextBox x:Name="tbTargetName" Grid.Column="1" Grid.Row="0" 
                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                      Text="{Binding SelectedItem.Name, ElementName=lvGuestList, Mode=TwoWay}" 
                      IsEnabled="{Binding NameTextboxController}"
                      FontSize="18"/>
-            <TextBox x:Name="tbTargetPhoneNumber" Grid.Column="1" Grid.Row="1" 
+                <TextBox x:Name="tbTargetPhoneNumber" Grid.Column="1" Grid.Row="1" 
                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                      Text="{Binding SelectedItem.PhoneNumber, ElementName=lvGuestList, Mode=TwoWay}" 
                      IsEnabled="{Binding PhoneNumberTextboxController}"
                      FontSize="18"/>
-            <TextBox x:Name="tbTimerSet" Grid.Column="1" Grid.Row="2" 
+                <TextBox x:Name="tbTimerSet" Grid.Column="1" Grid.Row="2" 
                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                      Text="{Binding SelectedItem.AlarmTime, ElementName=lvGuestList, Mode=TwoWay}" 
                      IsEnabled="{Binding AlarmTimeTextboxController}"
                      FontSize="18"/>
-            <TextBox x:Name="tbMemo" Grid.Column="1" Grid.Row="3" 
+                <TextBox x:Name="tbMemo" Grid.Column="1" Grid.Row="3" 
                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                      Text="{Binding SelectedItem.Memo, ElementName=lvGuestList, Mode=TwoWay}" 
                      IsEnabled="{Binding MemoTextboxController}"
                      FontSize="18"/>
-        </Grid>
+            </Grid>
 
-        <Grid Grid.Row="2">
-            <GroupBox Header="&lt;고객명단&gt;" FontSize="20">
-                <ListView x:Name="lvGuestList" FontSize="14"
+            <Grid Grid.Row="2">
+                <GroupBox Header="&lt;고객명단&gt;" FontSize="20">
+                    <ListView x:Name="lvGuestList" FontSize="14"
                           ItemsSource="{Binding Model}"
                           SelectedItem="{Binding LvModel.SelectedItem}">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn x:Name="colName" Header="이름" 
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn x:Name="colName" Header="이름" 
                                             Width="60" DisplayMemberBinding="{Binding Name}"/>
-                            <GridViewColumn x:Name="colPhoneNumber" Header="전화번호" 
+                                <GridViewColumn x:Name="colPhoneNumber" Header="전화번호" 
                                             Width="90" DisplayMemberBinding="{Binding PhoneNumber}"/>
-                            <GridViewColumn x:Name="colAlarmTime" Header="시간" 
+                                <GridViewColumn x:Name="colAlarmTime" Header="시간" 
                                             Width="50" DisplayMemberBinding="{Binding AlarmTime}"/>
-                            <GridViewColumn x:Name="colMemo" Header="메모" 
+                                <GridViewColumn x:Name="colMemo" Header="메모" 
                                             Width="75" DisplayMemberBinding="{Binding Memo}"/>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </GroupBox>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </GroupBox>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.6*"/>
+                <RowDefinition Height="0.3*"/>
+                <RowDefinition Height="0.1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+
+            <Image x:Name="ImgLoadedImage" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+            <TextBox x:Name="txtMessage" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
+            <Button x:Name="btnFindImage" Grid.Row="2" Grid.Column="0"/>
+            <Button x:Name="btnSendMessage" Grid.Row="2" Grid.Column="1"/>
         </Grid>
     </Grid>
+    
+    
 </Window>

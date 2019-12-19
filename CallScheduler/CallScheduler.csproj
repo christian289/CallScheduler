@@ -81,6 +81,7 @@
     <Compile Include="Global\DataXML.cs" />
     <Compile Include="Helper\ConversionHelper.cs" />
     <Compile Include="Helper\StringHelper.cs" />
+    <Compile Include="Helper\WindowsAPI.cs" />
     <Compile Include="Model\CommandBase.cs" />
     <Compile Include="Model\DataModel.cs" />
     <Compile Include="Model\ListViewModel.cs" />
@@ -92,6 +93,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\TestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -130,7 +132,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Data.xml" />
+    <None Include="Data.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
