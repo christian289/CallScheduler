@@ -1,13 +1,15 @@
 ﻿using CallScheduler.Base;
+using CallScheduler.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
-namespace CallScheduler.Model
+namespace CallScheduler.ViewModel
 {
-    public class DataModel : ModelBase
+    public class PopupViewModel : ModelBase
     {
         private string _Name = string.Empty;
 
@@ -33,18 +35,6 @@ namespace CallScheduler.Model
             }
         }
 
-        private string _AlarmTime = string.Empty;
-
-        public string AlarmTime
-        {
-            get => _AlarmTime;
-            set
-            {
-                _AlarmTime = value;
-                OnPropertyChanged();
-            }
-        }
-
         private string _Memo = string.Empty;
 
         public string Memo
@@ -55,6 +45,33 @@ namespace CallScheduler.Model
                 _Memo = value;
                 OnPropertyChanged();
             }
+        }
+
+        public PopupViewModel(DataModel obj)
+        {
+            Name = obj.Name;
+            PhoneNumber = obj.PhoneNumber;
+            Memo = obj.Memo;
+        }
+
+        private ICommand _OKCommand;
+
+        public ICommand OKCommand
+        {
+            get
+            {
+                return _OKCommand ?? (_OKCommand = new CommandBase(OK, CanExecute_OK, true));
+            }
+        }
+
+        private void OK()
+        {
+
+        }
+
+        private bool CanExecute_OK()
+        {
+            return true;
         }
     }
 }

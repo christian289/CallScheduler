@@ -1,5 +1,7 @@
-﻿using CallScheduler.Global;
+﻿using CallScheduler.Base;
+using CallScheduler.Global;
 using CallScheduler.Helper;
+using CallScheduler.Model;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -14,9 +16,9 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 
-namespace CallScheduler.Model
+namespace CallScheduler.ViewModel
 {
-    public class MainModel : ModelBase
+    public class MainViewModel : ModelBase
     {
         #region Property
 
@@ -285,7 +287,7 @@ namespace CallScheduler.Model
 
         #endregion
 
-        public MainModel()
+        public MainViewModel()
         {
             // WPF에서 MVVM Pattern을 사용하면
             // 프로그램 시작 시 XAML에서 Binding Property를 사용하기 때문에 초기화를
@@ -305,9 +307,9 @@ namespace CallScheduler.Model
                 //return _NewCommand ?? (_NewCommand = new CommandBase(New));
 
                 //return _NewCommand ?? (_NewCommand = new CommandBase<object>(
-                //    param => New(), param => CanExecute_New(), false));
+                //    param => New(), param => CanExecute_New(), true));
 
-                return _NewCommand ?? (_NewCommand = new CommandBase(New, CanExecute_New, false));
+                return _NewCommand ?? (_NewCommand = new CommandBase(New, CanExecute_New, true));
             }
         }
 

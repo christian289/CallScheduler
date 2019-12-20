@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Input;
 
-namespace CallScheduler.Model
+namespace CallScheduler.Base
 {
     #region 사용하지 않는 ICommand 생성자
     //public class CommandBase : ICommand

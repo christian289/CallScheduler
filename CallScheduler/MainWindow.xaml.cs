@@ -26,11 +26,11 @@ namespace CallScheduler
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MainModel _MainModel { get; set; }
+        private MainViewModel _MainModel { get; set; }
 
         public MainWindow()
         {
-            _MainModel = new MainModel();
+            _MainModel = new MainViewModel();
             DataContext = _MainModel;
 
             InitializeComponent();
