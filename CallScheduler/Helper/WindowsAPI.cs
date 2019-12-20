@@ -9,6 +9,8 @@ namespace CallScheduler.Helper
 {
     public static class WindowsAPI
     {
+        public delegate bool EnumDelegate(IntPtr hWnd, int lParam);
+
         #region 가상키보드 키코드
         public const int VK_LBUTTON = 0x01; // 마우스 왼쪽 버튼
         public const int VK_RBUTTON = 0x02; // 마우스 오른쪽 버튼
@@ -130,13 +132,20 @@ namespace CallScheduler.Helper
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr FindWindowEx(IntPtr hWnd1, IntPtr hWnd2, string lpsz1, string lpsz2);
 
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("user32.dll", EntryPoint = "GetWindowText", ExactSpelling = false, CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
 
         [DllImport("user32.dll")]
         public static extern bool IsWindow(IntPtr hWnd);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsWindowVisible(IntPtr hWnd);
+
+        [DllImport("user32.dll", EntryPoint = "EnumDesktopWindows", ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern bool EnumDesktopWindows(IntPtr hDesktop, EnumDelegate lpCallbackFunction, IntPtr lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern int SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, string lParam);
 
         /// <summary>

@@ -1,16 +1,25 @@
 ﻿using CallScheduler.Global;
+using CallScheduler.Helper;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media.Imaging;
 
 namespace CallScheduler.Model
 {
     public class MainModel : ModelBase
     {
+        #region Property
+
         #region 버튼 컨트롤러
         private bool _NewButtonController = true;
 
@@ -227,10 +236,54 @@ namespace CallScheduler.Model
         }
         #endregion
 
+        #region 불러온 이미지
+        private BitmapSource _LoadedImage;
+
+        public BitmapSource LoadedImage
+        {
+            get => _LoadedImage;
+            set
+            {
+                _LoadedImage = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region 입력한 텍스트
+        private string _InputText = string.Empty;
+
+        public string InputText
+        {
+            get => _InputText;
+            set
+            {
+                _InputText = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region 찾을 카카오톡 채팅방 이름 키워드
+        private string _TargetKeyword = string.Empty;
+
+        public string TargetKeyword
+        {
+            get => _TargetKeyword;
+            set
+            {
+                _TargetKeyword = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
         /// <summary>
         /// 고객명단 보조
         /// </summary>
         public ListViewModel LvModel { get; set; } = new ListViewModel();
+
+        #endregion
 
         public MainModel()
         {
@@ -238,6 +291,8 @@ namespace CallScheduler.Model
             // 프로그램 시작 시 XAML에서 Binding Property를 사용하기 때문에 초기화를
             // 생성자가 아닌 맴버변수에 해주는게 좋다.
         }
+
+        #region ICommand
 
         #region 알람 추가
         private ICommand _NewCommand;
@@ -273,7 +328,7 @@ namespace CallScheduler.Model
                 AddButtonName = "알람 추가";
                 Mode = CRUDmode.Read;
 
-                // 추가 완료 메세지박스
+                MessageBox.Show("추가 완료", "알람", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -311,7 +366,7 @@ namespace CallScheduler.Model
                 EditButtonName = "알람 수정";
                 Mode = CRUDmode.Read;
 
-                // 수정 완료 메세지박스
+                MessageBox.Show("수정 완료", "알람", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -371,17 +426,162 @@ namespace CallScheduler.Model
         {
             if (DataXML.XmlSave(new List<DataModel>(Model), FilePath))
             {
-                // 저장완료 메세지 박스
+                MessageBox.Show("저장 완료", "알람", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
-                // 저장실패 메세지 박스
+                MessageBox.Show("저장 실패", "알람", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private bool CanExecute_Save()
         {
             return true;
+        }
+        #endregion
+
+        #region 이미지 불러오기
+        private ICommand _LoadingImageCommand;
+
+        public ICommand LoadingImageCommand
+        {
+            get
+            {
+                return _LoadingImageCommand ?? (_LoadingImageCommand = new CommandBase(LoadingImage, CanExecute_LoadingImage, true));
+            }
+        }
+
+        private void LoadingImage()
+        {
+            OpenFileDialog DlgImageFile = new OpenFileDialog();
+            DlgImageFile.Multiselect = false;
+            DlgImageFile.Filter = "이미지 파일 (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg|모든 파일 (*.*)|*.*";
+            DlgImageFile.InitialDirectory = Directory.GetCurrentDirectory() + @"\Image";
+
+            if (DlgImageFile.ShowDialog() == true) 
+            {
+                Bitmap _Image = Image.FromFile(DlgImageFile.FileName, true) as Bitmap;
+                LoadedImage = BitmapToBitmapSource(_Image);
+            }
+
+            // WPF에서는 OpenFileDialog가 System.Windows.Forms 네임스페이스가 아닌,
+            // Microsoft.Win32 이기 때문에 Windows Forms에서 사용하던 OpenFileDialog가 아니다.
+            // 이 OpenFileDialog는 ShowDialog() 시 return 값이 bool이 아닌 bool? 이므로 명시적으로 == true를 해줘야 한다.
+        }
+
+        private bool CanExecute_LoadingImage()
+        {
+            return true;
+        }
+        #endregion
+
+        #region 전송
+        private ICommand _SendCommand;
+
+        public ICommand SendCommand
+        {
+            get
+            {
+                return _SendCommand ?? (_SendCommand = new CommandBase(Send, CanExecute_Send, true));
+            }
+        }
+
+        private void Send()
+        {
+            if (WindowInfo.GetWindowHandleInfo())
+            {
+                WindowInfo.FindTargetHandle(TargetKeyword);
+                string strMsg = string.Format("메세지를 전송할 화면이 {0}개 입니다. 전송하시겠습니까?", WindowInfo.TargetHandle.Count);
+
+                if (MessageBox.Show(strMsg, "알람", MessageBoxButton.OKCancel, MessageBoxImage.Question).Equals(MessageBoxResult.OK))
+                {
+                    Clipboard.SetImage(LoadedImage); // 클립보드에 이미지 복사
+
+                    try
+                    {
+                        foreach (KeyValuePair<IntPtr, string> item in WindowInfo.TargetHandle)
+                        {
+                            IntPtr ChildHandle = IsKaKaoTalkOpen(item.Value);
+                            ImgClipBoardPaste(ChildHandle);
+                            SendText(ChildHandle, InputText);
+                        }
+                    }
+                    catch
+                    {
+                        return;
+                    }
+
+                    MessageBox.Show("전송이 완료되었습니다.", "알람", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            else
+            {
+                // 창 핸들 로딩 실패
+            }
+        }
+
+        private bool CanExecute_Send()
+        {
+            return true;
+        }
+        #endregion
+
+        #endregion
+
+        #region 기능 함수
+        /// <summary>
+        /// PC 카카오톡 창 핸들 찾기
+        /// </summary>
+        /// <param name="RoomName"></param>
+        /// <returns></returns>
+        private IntPtr IsKaKaoTalkOpen(string RoomName)
+        {
+            IntPtr TargetWindowNameHnd = WindowsAPI.FindWindow(null, RoomName);
+
+            if (TargetWindowNameHnd.Equals(IntPtr.Zero))
+            {
+                return IntPtr.Zero;
+            }
+
+            if (!WindowsAPI.IsWindow(TargetWindowNameHnd)) // 창 핸들인지 확인한다.
+            {
+                return IntPtr.Zero;
+            }
+
+            // 총 2개의 하위 다이얼로그가 있으므로 핸들을 각각 가져온다.
+            IntPtr kakaoTextboxHandle = WindowsAPI.FindWindowEx(TargetWindowNameHnd, IntPtr.Zero, "RichEdit20W", null);
+
+            return kakaoTextboxHandle;
+        }
+
+        /// <summary>
+        /// 클립보드에 복사한 이미지를 대상 창 핸들에 Ctrl + V 이벤트 발생
+        /// </summary>
+        /// <param name="hEdit">대상 창 핸들</param>
+        private void ImgClipBoardPaste(IntPtr hEdit)
+        {
+            // 나중에 마우스 잠금 해야 함.
+            WindowsAPI.SetForegroundWindow(hEdit);
+            WindowsAPI.keybd_event(WindowsAPI.VK_LCONTROL, 0, WindowsAPI.KEYEVENTF_EXTENDEDKEY, 0);
+            WindowsAPI.keybd_event(WindowsAPI.VK_V, 0, WindowsAPI.KEYEVENTF_EXTENDEDKEY, 0);
+            WindowsAPI.keybd_event(WindowsAPI.VK_ENTER, 0, WindowsAPI.KEYEVENTF_EXTENDEDKEY, 0);
+            WindowsAPI.keybd_event(WindowsAPI.VK_LCONTROL, 0, WindowsAPI.KEYEVENTF_EXTENDEDKEY | WindowsAPI.KEYEVENTF_KEYUP, 0);
+            WindowsAPI.keybd_event(WindowsAPI.VK_V, 0, WindowsAPI.KEYEVENTF_EXTENDEDKEY | WindowsAPI.KEYEVENTF_KEYUP, 0);
+            WindowsAPI.keybd_event(WindowsAPI.VK_ENTER, 0, WindowsAPI.KEYEVENTF_EXTENDEDKEY | WindowsAPI.KEYEVENTF_KEYUP, 0);
+        }
+
+        public void SendText(IntPtr hEdit, string SendText)
+        {
+            WindowsAPI.SendMessage(hEdit, WindowsAPI.WM_SETTEXT, IntPtr.Zero, SendText);
+            //WindowsAPI.PostMessage(hEdit, WindowsAPI.WM_KEYDOWN, WindowsAPI.VK_ENTER, IntPtr.Zero); // 이미지 전송과 함께 사용할 경우 동작하지 않음.
+            //WindowsAPI.PostMessage(hEdit, WindowsAPI.WM_KEYUP, WindowsAPI.VK_ENTER, IntPtr.Zero); // 이미지 전송과 함께 사용할 경우 동작하지 않음.
+            WindowsAPI.keybd_event(WindowsAPI.VK_ENTER, 0, WindowsAPI.KEYEVENTF_EXTENDEDKEY, 0);
+            WindowsAPI.keybd_event(WindowsAPI.VK_ENTER, 0, WindowsAPI.KEYEVENTF_EXTENDEDKEY | WindowsAPI.KEYEVENTF_KEYUP, 0);
+        }
+
+        public BitmapSource BitmapToBitmapSource(Bitmap source)
+        {
+            return Imaging.CreateBitmapSourceFromHBitmap(source.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
         }
         #endregion
     }
