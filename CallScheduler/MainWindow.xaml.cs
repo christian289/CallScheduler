@@ -1,5 +1,6 @@
 ﻿using CallScheduler.Global;
 using CallScheduler.Model;
+using CallScheduler.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

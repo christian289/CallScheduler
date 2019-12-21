@@ -64,18 +64,25 @@ namespace CallScheduler.Global
         {
             List<DataModel> Data = new List<DataModel>();
             XmlDocument xml = new XmlDocument();
-            xml.Load(DataFilePath);
-
-            XmlNodeList nodes = xml.SelectNodes(string.Format("/{0}/{1}", NodeName.Alarm.ToString(), NodeName.Customer.ToString()));
-
-            foreach (XmlNode node in nodes)
+            try
             {
-                DataModel item = new DataModel();
-                item.Name = node[NodeName.Name.ToString()].InnerText;
-                item.PhoneNumber = node[NodeName.PhoneNumber.ToString()].InnerText;
-                item.AlarmTime = node[NodeName.AlarmTime.ToString()].InnerText;
-                item.Memo = node[NodeName.Memo.ToString()].InnerText;
-                Data.Add(item);
+                xml.Load(DataFilePath);
+
+                XmlNodeList nodes = xml.SelectNodes(string.Format("/{0}/{1}", NodeName.Alarm.ToString(), NodeName.Customer.ToString()));
+
+                foreach (XmlNode node in nodes)
+                {
+                    DataModel item = new DataModel();
+                    item.Name = node[NodeName.Name.ToString()].InnerText;
+                    item.PhoneNumber = node[NodeName.PhoneNumber.ToString()].InnerText;
+                    item.AlarmTime = node[NodeName.AlarmTime.ToString()].InnerText;
+                    item.Memo = node[NodeName.Memo.ToString()].InnerText;
+                    Data.Add(item);
+                }
+            }
+            catch
+            {
+
             }
 
             return Data;

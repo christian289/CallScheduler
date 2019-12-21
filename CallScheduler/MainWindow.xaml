@@ -155,7 +155,8 @@
                 <TextBox x:Name="txtSearchChatRoomKeyword" BorderThickness="1" BorderBrush="WhiteSmoke"
                          HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                          HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                         FontSize="30" Text="{Binding TargetKeyword, UpdateSourceTrigger=PropertyChanged}"/> <!-- TextBox.Text Binding을 이처럼 할 수도 있다.-->
+                         FontSize="30" Text="{Binding TargetKeyword, UpdateSourceTrigger=PropertyChanged}"/>
+                <!-- TextBox.Text Binding을 이처럼 할 수도 있다.-->
             </DockPanel>
             <Border BorderThickness="1" BorderBrush="WhiteSmoke" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                 <Image x:Name="ImgLoadedImage" Margin="10,10,10,10" Source="{Binding LoadedImage}"/>
@@ -171,6 +172,14 @@
             <Button x:Name="btnSendMessage" Grid.Row="3" Grid.Column="1"
                     Content="전송" FontSize="28"
                     Command="{Binding SendCommand}"/>
+            <Button Content="Button" HorizontalAlignment="Left" Height="0" Margin="143,165,0,0" Grid.Row="2" VerticalAlignment="Top" Width="6"/>
         </Grid>
+
+        <Popup x:Name="PpAlarm" IsOpen="{Binding PpOpen}">
+            <Grid x:Name="PpGrdAlarm">
+
+            </Grid>
+        </Popup>
+        
     </Grid>
 </Window>

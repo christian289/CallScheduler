@@ -39,7 +39,7 @@ namespace CallScheduler.Global
 
             if (WindowsAPI.IsWindowVisible(hWnd) && !string.IsNullOrEmpty(title))
             {
-                WindowsDic.Add(hWnd, title);
+                WindowsDic.Add(hWnd, title);// 재전송에러
             }
 
             return true;

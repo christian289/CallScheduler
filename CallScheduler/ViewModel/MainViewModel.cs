@@ -280,6 +280,21 @@ namespace CallScheduler.ViewModel
         }
         #endregion
 
+        #region 알람 팝업 오픈
+        private bool _PpOpen = false;
+
+        public bool PpOpen
+        {
+            get => _PpOpen;
+            set
+            {
+                _PpOpen = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion
+
         /// <summary>
         /// 고객명단 보조
         /// </summary>
