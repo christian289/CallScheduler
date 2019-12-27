@@ -280,7 +280,7 @@ namespace CallScheduler.ViewModel
         }
         #endregion
 
-        #region 알람 팝업 오픈
+        #region 팝업 오픈 플래그
         private bool _PpOpen = false;
 
         public bool PpOpen
@@ -292,8 +292,12 @@ namespace CallScheduler.ViewModel
                 OnPropertyChanged();
             }
         }
-
         #endregion
+
+        /// <summary>
+        /// 팝업 정보
+        /// </summary>
+        public PopupModel PpModel { get; set; } = new PopupModel();
 
         /// <summary>
         /// 고객명단 보조
@@ -470,10 +474,12 @@ namespace CallScheduler.ViewModel
 
         private void LoadingImage()
         {
-            OpenFileDialog DlgImageFile = new OpenFileDialog();
-            DlgImageFile.Multiselect = false;
-            DlgImageFile.Filter = "이미지 파일 (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg|모든 파일 (*.*)|*.*";
-            DlgImageFile.InitialDirectory = Directory.GetCurrentDirectory() + @"\Image";
+            OpenFileDialog DlgImageFile = new OpenFileDialog
+            {
+                Multiselect = false,
+                Filter = "이미지 파일 (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg|모든 파일 (*.*)|*.*",
+                InitialDirectory = Directory.GetCurrentDirectory() + @"\Image"
+            };
 
             if (DlgImageFile.ShowDialog() == true) 
             {
@@ -541,6 +547,30 @@ namespace CallScheduler.ViewModel
         {
             return true;
         }
+        #endregion
+
+        #region 팝업 닫기
+        private ICommand _PopupCloseCommand;
+
+        public ICommand PopupCloseCommand
+        {
+            get
+            {
+                return _PopupCloseCommand ?? (_PopupCloseCommand = new CommandBase(PopupClose, CanExecute_PopupClose, true));
+            }
+        }
+
+        private void PopupClose()
+        {
+            PpModel.Init();
+            PpOpen = false;
+        }
+
+        private bool CanExecute_PopupClose()
+        {
+            return true;
+        }
+
         #endregion
 
         #endregion

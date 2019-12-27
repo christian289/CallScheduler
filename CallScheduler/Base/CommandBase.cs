@@ -317,7 +317,7 @@ namespace CallScheduler.Base
     {
         public static void CallWeakReferenceHandler(List<WeakReference> handler)
         {
-            if(!ReferenceEquals(handler, null))
+            if(handler is object)
             {
                 // Take a snapshot of the handlers before we call out to them since the handlers
                 // could cause the array to me modified while we are reading it.
@@ -327,9 +327,8 @@ namespace CallScheduler.Base
                 for (int i = handler.Count - 1; i >= 0; i--)
                 {
                     WeakReference WkReference = handler[i];
-                    EventHandler _handler = WkReference.Target as EventHandler;
 
-                    if (_handler is null)
+                    if (!(WkReference.Target is EventHandler _handler))
                     {
                         // Clean up old handlers that have been collected
                         handler.RemoveAt(i);
@@ -351,13 +350,11 @@ namespace CallScheduler.Base
 
         public static void AddHandlersToRequerySuggested(List<WeakReference> handler)
         {
-            if (!ReferenceEquals(handler, null))
+            if (handler is object)
             {
                 foreach (WeakReference handlerRef in handler)
                 {
-                    EventHandler _handler = handlerRef.Target as EventHandler;
-
-                    if (!ReferenceEquals(_handler, null))
+                    if (handlerRef.Target is EventHandler _handler)
                     {
                         CommandManager.RequerySuggested += _handler;
                     }
@@ -367,13 +364,11 @@ namespace CallScheduler.Base
 
         public static void RemoveHandlersFromRequerySuggested(List<WeakReference> handler)
         {
-            if (!ReferenceEquals(handler, null))
+            if (handler is object)
             {
                 foreach (WeakReference handlerRef in handler)
                 {
-                    EventHandler _handler = handlerRef.Target as EventHandler;
-
-                    if (!ReferenceEquals(_handler, null))
+                    if (handlerRef.Target is EventHandler _handler)
                     {
                         CommandManager.RequerySuggested -= _handler;
                     }
@@ -398,14 +393,13 @@ namespace CallScheduler.Base
 
         public static void RemoveWeakReferenceHandler(List<WeakReference> handler, EventHandler _handler)
         {
-            if (!ReferenceEquals(handler, null))
+            if (handler is object)
             {
                 for (int i = handler.Count - 1; i >= 0; i--)
                 {
                     WeakReference WkReference = handler[i];
-                    EventHandler existingHandler = WkReference.Target as EventHandler;
 
-                    if (existingHandler is null || existingHandler.Equals(_handler))
+                    if (!(WkReference.Target is EventHandler existingHandler) || existingHandler.Equals(_handler))
                     {
                         // Clean up old handlers that have been collected
                         // in addition to the handler that is to be removed.

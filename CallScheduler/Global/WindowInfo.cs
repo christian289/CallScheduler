@@ -21,6 +21,8 @@ namespace CallScheduler.Global
 
         public static bool GetWindowHandleInfo()
         {
+            WindowsDic.Clear();
+
             if (!WindowsAPI.EnumDesktopWindows(IntPtr.Zero, FilterCallback, IntPtr.Zero))
             {
                 return false;

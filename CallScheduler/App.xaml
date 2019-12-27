@@ -3,17 +3,4 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:CallScheduler"
              StartupUri="MainWindow.xaml">
-    <Application.Resources>
-        <Style x:Key="BorderedItem" TargetType="ListViewItem">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListViewItem">
-                        <Border Name="Border" BorderBrush="Transparent" BorderThickness="2">
-                            <ContentPresenter />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Application.Resources>
 </Application>
