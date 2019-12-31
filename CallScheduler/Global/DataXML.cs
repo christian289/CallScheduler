@@ -41,7 +41,7 @@ namespace CallScheduler.Global
                 Customer.AppendChild(PhoneNumber);
 
                 XmlNode AlarmTime = xml.CreateElement(NodeName.AlarmTime.ToString());
-                AlarmTime.InnerText = data.AlarmTime;
+                AlarmTime.InnerText = data.AlarmTime.ToString("yyyy/MM/dd HH:mm");
                 Customer.AppendChild(AlarmTime);
 
                 XmlNode Memo = xml.CreateElement(NodeName.Memo.ToString());
@@ -75,7 +75,7 @@ namespace CallScheduler.Global
                     DataModel item = new DataModel();
                     item.Name = node[NodeName.Name.ToString()].InnerText;
                     item.PhoneNumber = node[NodeName.PhoneNumber.ToString()].InnerText;
-                    item.AlarmTime = node[NodeName.AlarmTime.ToString()].InnerText;
+                    item.AlarmTime = DateTime.ParseExact(node[NodeName.AlarmTime.ToString()].InnerText, "yyyy/MM/dd HH:mm", null);
                     item.Memo = node[NodeName.Memo.ToString()].InnerText;
                     Data.Add(item);
                 }

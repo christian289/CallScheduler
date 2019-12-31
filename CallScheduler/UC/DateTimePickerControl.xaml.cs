@@ -237,9 +237,56 @@ namespace UC
 
         #endregion
 
+        #region Properties
+
+        private DateTime _SelectedDate = DateTime.Now;
+
+        public DateTime SelectedDate
+        {
+            get => _SelectedDate;
+            set
+            {
+                _SelectedDate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _Hour = 0;
+
+        public int Hour
+        {
+            get => _Hour;
+            set
+            {
+                _Hour = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _Minute = 0;
+
+        public int Minute
+        {
+            get => _Minute;
+            set
+            {
+                _Minute = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion
+
         public DateTimePickerControl()
         {
+            DataContext = this;
             InitializeComponent();
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            SpDateController.Hour = DateTime.Now.Hour;
+            SpDateController.Minute = DateTime.Now.Minute;
         }
     }
 }

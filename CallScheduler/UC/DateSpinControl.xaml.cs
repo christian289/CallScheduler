@@ -20,7 +20,7 @@ using System.Windows.Shapes;
 /// </summary>
 namespace UC
 {
-    public partial class SpinControl : UserControl
+    public partial class DateSpinControl : UserControl
     {
         #region Base
 
@@ -259,8 +259,20 @@ namespace UC
             }
         }
 
+        private int _FontSize = 11;
+
+        public new int FontSize
+        {
+            get => _FontSize;
+            set
+            {
+                _FontSize = value;
+                OnPropertyChanged();
+            }
+        }
+
         #region HourUp 삼각형 Point 좌표
-        private PointCollection _HourUpPoint = new PointCollection(new Point[] { new Point(10, 15), new Point(15, 10), new Point(20, 15) });
+        private PointCollection _HourUpPoint = new PointCollection(new Point[] { new Point(5, 10), new Point(15, 10), new Point(25, 10) });
 
         public PointCollection HourUpPoint
         {
@@ -437,7 +449,7 @@ namespace UC
 
         #endregion
 
-        public SpinControl()
+        public DateSpinControl()
         {
             DataContext = this;
             InitializeComponent();

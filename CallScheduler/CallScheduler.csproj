@@ -77,13 +77,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Global\DateTimeConverter.cs" />
+    <Compile Include="Global\ContentDateTimeConverter.cs" />
+    <Compile Include="Global\PopupDateTimeConverter.cs" />
     <Compile Include="Model\PopupModel.cs" />
     <Compile Include="UC\DateTimePickerControl.xaml.cs">
       <DependentUpon>DateTimePickerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UC\SpinControl.xaml.cs">
-      <DependentUpon>SpinControl.xaml</DependentUpon>
+    <Compile Include="UC\DateSpinControl.xaml.cs">
+      <DependentUpon>DateSpinControl.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -112,7 +113,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UC\SpinControl.xaml">
+    <Page Include="UC\DateSpinControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

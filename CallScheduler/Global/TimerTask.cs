@@ -19,9 +19,22 @@ namespace CallScheduler.Global
         public TimerTask(DataModel Target)
         {
             _Target = Target;
+        }
 
-            string[] HourMinute = _Target.AlarmTime.Split(':');
-            AlarmTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, HourMinute[0].ToInt32Ex(), HourMinute[1].ToInt32Ex(), 0);
+        public async Task<bool> AlarmStart()
+        {
+            Func<bool> func = new Func<bool>(() =>
+            {
+                while (true)
+                {
+                    if (DateTime.Now == AlarmTime)
+                    {
+                        return true;
+                    }
+                }
+            });
+
+            return await Task.Run(func);
         }
     }
 }

@@ -4,14 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:UC"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Canvas>
-        <Calendar>
-
-        </Calendar>
-        <local:SpinControl Canvas.Left="92" Canvas.Top="329" Width="334">
-
-        </local:SpinControl>
-    </Canvas>
+             mc:Ignorable="d" d:DesignWidth="200" Height="220" Loaded="UserControl_Loaded"
+             >
+    <StackPanel>
+        <Viewbox>
+            <Calendar x:Name="ClnrDatePicker" SelectedDate="{Binding SelectedDate}"/>
+        </Viewbox>
+        <local:DateSpinControl x:Name="SpDateController" Width="200"/>
+    </StackPanel>
 </UserControl>

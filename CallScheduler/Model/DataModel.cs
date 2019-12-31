@@ -33,9 +33,9 @@ namespace CallScheduler.Model
             }
         }
 
-        private string _AlarmTime = string.Empty;
+        private DateTime _AlarmTime = new DateTime();
 
-        public string AlarmTime
+        public DateTime AlarmTime
         {
             get => _AlarmTime;
             set

@@ -292,6 +292,18 @@ namespace CallScheduler.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        private bool _PpDTPAlarmTimeFlag = false;
+
+        public bool PpDTPAlarmTimeFlag
+        {
+            get => _PpDTPAlarmTimeFlag;
+            set
+            {
+                _PpDTPAlarmTimeFlag = value;
+                OnPropertyChanged();
+            }
+        }
         #endregion
 
         /// <summary>
