@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:CallScheduler"
         xmlns:cnvt="clr-namespace:CallScheduler.Global"
         xmlns:UC="clr-namespace:UC"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="오리멍게 알람" Height="900" Width="800">
+        Title="알람관리" Height="900" Width="800">
     <Window.Resources>
         <cnvt:PopupDateTimeConverter x:Key="PopupDateTimeConverter"/>
         <cnvt:ContentDateTimeConverter x:Key="ContentDateTimeConverter"/>
@@ -72,11 +73,11 @@
                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                        Content="고객 전화번호" FontSize="18"/>
-                <Label x:Name="LblTimerSet" Grid.Column="0" Grid.Row="2" 
+                <Label x:Name="LblTargetTimerSet" Grid.Column="0" Grid.Row="2" 
                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                        Content="알람 시간" FontSize="18"/>
-                <Label x:Name="LblMemo" Grid.Column="0" Grid.Row="3" 
+                <Label x:Name="LblTagerMemo" Grid.Column="0" Grid.Row="3" 
                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                        Content="메모" FontSize="18"/>
@@ -90,10 +91,11 @@
                          VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                          IsEnabled="{Binding PhoneNumberTextboxController}" FontSize="18"
                          Text="{Binding SelectedItem.PhoneNumber, ElementName=lvGuestList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button x:Name="BtnTimerSet" Grid.Column="1" Grid.Row="2"
+                <Button x:Name="BtnTargetTimerSet" Grid.Column="1" Grid.Row="2"
                         VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                        IsEnabled="{Binding AlarmTimeTextboxController}" FontSize="18">
+                        IsEnabled="{Binding AlarmTimeTextboxController}" FontSize="18"
+                        Command="{Binding DateTimePickerPopupOpenCommand}">
                     <Button.Content>
                         <Binding Path="SelectedItem.AlarmTime"
                                  ElementName="lvGuestList"
@@ -102,13 +104,13 @@
                                  Converter="{StaticResource PopupDateTimeConverter}"/>
                     </Button.Content>
                 </Button>
-                <Popup x:Name="DTPAlarmTime" IsOpen="{Binding PpDTPAlarmTimeFlag}" PlacementTarget="{Binding ElementName=BtnTimerSet}" 
+                <Popup x:Name="DTPAlarmTime" IsOpen="{Binding PpDTPAlarmTime}" PlacementTarget="{Binding ElementName=BtnTimerSet}" 
                        Placement="Right">
                     <Border BorderBrush="Black" BorderThickness="1" Background="AliceBlue" Width="200" Height="220">
                         <UC:DateTimePickerControl/>
                     </Border>
                 </Popup>
-                <TextBox x:Name="TbMemo" Grid.Column="1" Grid.Row="3" 
+                <TextBox x:Name="TbTagerMemo" Grid.Column="1" Grid.Row="3" 
                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                          VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                          IsEnabled="{Binding MemoTextboxController}" FontSize="18"
@@ -127,14 +129,59 @@
                                 <GridViewColumn x:Name="ColPhoneNumber" Header="전화번호" 
                                                 Width="90" DisplayMemberBinding="{Binding PhoneNumber}"/>
                                 <GridViewColumn x:Name="ColAlarmTime" Header="시간" 
-                                                Width="50" DisplayMemberBinding="{Binding AlarmTime}"/>
+                                                Width="150" DisplayMemberBinding="{Binding AlarmTime}"/>
                                 <GridViewColumn x:Name="ColMemo" Header="메모" 
-                                                Width="75" DisplayMemberBinding="{Binding Memo}"/>
+                                                Width="1000" DisplayMemberBinding="{Binding Memo}"/>
                             </GridView>
                         </ListView.View>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding MouseDoubleClickCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </ListView>
                 </GroupBox>
             </Grid>
+            <Popup x:Name="PpDetailInfoView" IsOpen="{Binding PpDetailInfoView}"
+                   Width="600" Height="400"
+                   PlacementTarget="{Binding ElementName=GrdMain}"
+                   Placement="Center"
+                   PopupAnimation="Fade">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Label x:Name="LblName" Grid.Row="0" Grid.Column="0" Content="이름"
+                           FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label x:Name="LblNameContent" Grid.Row="0" Grid.Column="1" Content="{Binding SelectedItem.Name, ElementName=lvGuestList}"
+                           FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <Label x:Name="LblPhoneNumber" Grid.Row="1" Grid.Column="0" Content="연락처"
+                           FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label x:Name="LblPhoneNumberContent" Grid.Row="1" Grid.Column="1" Content="{Binding SelectedItem.PhoneNumber, ElementName=lvGuestList}"
+                           FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <Label x:Name="LblAlarmTime" Grid.Row="2" Grid.Column="0" Content="알람 시간"
+                           FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label x:Name="LblAlarmTimeContent" Grid.Row="2" Grid.Column="1" Content="{Binding SelectedItem.AlarmTime, ElementName=lvGuestList}"
+                           FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <Label x:Name="LblMemo" Grid.Row="3" Grid.Column="0" Content="메모"
+                           FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="TbkMemoContent" Grid.Row="3" Grid.Column="1" Text="{Binding SelectedItem.Memo, ElementName=lvGuestList}"
+                               FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                    <Button x:Name="BtnDetailInfoClose" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Content="확인" 
+                            Width="300" Height="50"
+                            FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Command="{Binding MouseDoubleClickCommand}"/>
+                </Grid>
+            </Popup>
         </Grid>
 
         <Grid x:Name="GrdSendInfo" Grid.Column="1">

@@ -281,6 +281,8 @@ namespace CallScheduler.ViewModel
         #endregion
 
         #region 팝업 오픈 플래그
+
+        #region 알람 오픈
         private bool _PpOpen = false;
 
         public bool PpOpen
@@ -292,18 +294,36 @@ namespace CallScheduler.ViewModel
                 OnPropertyChanged();
             }
         }
+        #endregion
 
-        private bool _PpDTPAlarmTimeFlag = false;
+        #region 날짜 선택
+        private bool _PpDTPAlarmTime = false;
 
-        public bool PpDTPAlarmTimeFlag
+        public bool PpDTPAlarmTime
         {
-            get => _PpDTPAlarmTimeFlag;
+            get => _PpDTPAlarmTime;
             set
             {
-                _PpDTPAlarmTimeFlag = value;
+                _PpDTPAlarmTime = value;
                 OnPropertyChanged();
             }
         }
+        #endregion
+
+        #region 알람 상세 팝업
+        private bool _PpDetailInfoView = false;
+
+        public bool PpDetailInfoView
+        {
+            get => _PpDetailInfoView;
+            set
+            {
+                _PpDetailInfoView = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
         #endregion
 
         /// <summary>
@@ -561,7 +581,7 @@ namespace CallScheduler.ViewModel
         }
         #endregion
 
-        #region 팝업 닫기
+        #region 알람 팝업 닫기
         private ICommand _PopupCloseCommand;
 
         public ICommand PopupCloseCommand
@@ -582,9 +602,107 @@ namespace CallScheduler.ViewModel
         {
             return true;
         }
-
         #endregion
 
+        #region 날짜 선택
+        private ICommand _DateTimePickerPopupOpenCommand;
+
+        public ICommand DateTimePickerPopupOpenCommand
+        {
+            get
+            {
+                return _DateTimePickerPopupOpenCommand ?? (_DateTimePickerPopupOpenCommand = new CommandBase(DateTimePickerPopupOpen, CanExecute_DateTimePickerPopupOpen, true));
+            }
+        }
+
+        private void DateTimePickerPopupOpen()
+        {
+            if (!PpDTPAlarmTime)
+            {
+                PpDTPAlarmTime = true;
+            }
+            else
+            {
+                PpDTPAlarmTime = false;
+            }
+        }
+
+        private bool CanExecute_DateTimePickerPopupOpen()
+        {
+            return true;
+        }
+        #endregion
+
+        #region 상세 정보 팝업 열기
+        private ICommand _DetailInfoViewOpenCommand;
+
+        public ICommand DetailInfoViewOpenCommand
+        {
+            get
+            {
+                return _DetailInfoViewOpenCommand ?? (_DetailInfoViewOpenCommand = new CommandBase(DetailInfoViewOpen, CanExecute_DetailInfoViewOpen, true));
+            }
+        }
+
+        private void DetailInfoViewOpen()
+        {
+            PpDetailInfoView = true;
+        }
+
+        private bool CanExecute_DetailInfoViewOpen()
+        {
+            return true;
+        }
+        #endregion
+
+        #region 상세 정보 팝업 닫기
+        private ICommand _DetailInfoViewCloseCommand;
+
+        public ICommand DetailInfoViewCloseCommand
+        {
+            get
+            {
+                return _DetailInfoViewCloseCommand ?? (_DetailInfoViewCloseCommand = new CommandBase(DetailInfoViewClose, CanExecute_DetailInfoViewClose, true));
+            }
+        }
+
+        private void DetailInfoViewClose()
+        {
+            PpDetailInfoView = false;
+        }
+
+        private bool CanExecute_DetailInfoViewClose()
+        {
+            return true;
+        }
+        #endregion
+
+        private ICommand _MouseDoubleClickCommand;
+
+        public ICommand MouseDoubleClickCommand
+        {
+            get
+            {
+                return _MouseDoubleClickCommand ?? (_MouseDoubleClickCommand = new CommandBase<object>(MouseDoubleClick, CanExecute_MouseDoubleClick, true));
+            }
+        }
+
+        private void MouseDoubleClick(object args)
+        {
+            if (!PpDetailInfoView)
+            {
+                PpDetailInfoView = true;
+            }
+            else
+            {
+                PpDetailInfoView = false;
+            }
+        }
+
+        private bool CanExecute_MouseDoubleClick(object args)
+        {
+            return true;
+        }
         #endregion
 
         #region 기능 함수
