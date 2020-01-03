@@ -147,40 +147,42 @@
                    PlacementTarget="{Binding ElementName=GrdMain}"
                    Placement="Center"
                    PopupAnimation="Fade">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
+                <Border BorderBrush="Black" BorderThickness="1" Background="AliceBlue">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
 
-                    <Label x:Name="LblName" Grid.Row="0" Grid.Column="0" Content="이름"
+                        <Label x:Name="LblName" Grid.Row="0" Grid.Column="0" Content="이름"
                            FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Label x:Name="LblNameContent" Grid.Row="0" Grid.Column="1" Content="{Binding SelectedItem.Name, ElementName=lvGuestList}"
+                        <Label x:Name="LblNameContent" Grid.Row="0" Grid.Column="1" Content="{Binding SelectedItem.Name, ElementName=lvGuestList}"
                            FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
-                    <Label x:Name="LblPhoneNumber" Grid.Row="1" Grid.Column="0" Content="연락처"
+                        <Label x:Name="LblPhoneNumber" Grid.Row="1" Grid.Column="0" Content="연락처"
                            FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Label x:Name="LblPhoneNumberContent" Grid.Row="1" Grid.Column="1" Content="{Binding SelectedItem.PhoneNumber, ElementName=lvGuestList}"
+                        <Label x:Name="LblPhoneNumberContent" Grid.Row="1" Grid.Column="1" Content="{Binding SelectedItem.PhoneNumber, ElementName=lvGuestList}"
                            FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
-                    <Label x:Name="LblAlarmTime" Grid.Row="2" Grid.Column="0" Content="알람 시간"
+                        <Label x:Name="LblAlarmTime" Grid.Row="2" Grid.Column="0" Content="알람 시간"
                            FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Label x:Name="LblAlarmTimeContent" Grid.Row="2" Grid.Column="1" Content="{Binding SelectedItem.AlarmTime, ElementName=lvGuestList}"
+                        <Label x:Name="LblAlarmTimeContent" Grid.Row="2" Grid.Column="1" Content="{Binding SelectedItem.AlarmTime, ElementName=lvGuestList}"
                            FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
-                    <Label x:Name="LblMemo" Grid.Row="3" Grid.Column="0" Content="메모"
+                        <Label x:Name="LblMemo" Grid.Row="3" Grid.Column="0" Content="메모"
                            FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="TbkMemoContent" Grid.Row="3" Grid.Column="1" Text="{Binding SelectedItem.Memo, ElementName=lvGuestList}"
+                        <TextBlock x:Name="TbkMemoContent" Grid.Row="3" Grid.Column="1" Text="{Binding SelectedItem.Memo, ElementName=lvGuestList}"
                                FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0"/>
-                    <Button x:Name="BtnDetailInfoClose" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Content="확인" 
+                        <Button x:Name="BtnDetailInfoClose" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Content="확인" 
                             Width="300" Height="50"
                             FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"
                             Command="{Binding MouseDoubleClickCommand}"/>
-                </Grid>
+                    </Grid>
+                </Border>
             </Popup>
         </Grid>
 

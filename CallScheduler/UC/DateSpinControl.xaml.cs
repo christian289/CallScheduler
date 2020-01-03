@@ -20,6 +20,9 @@ using System.Windows.Shapes;
 /// </summary>
 namespace UC
 {
+    /*
+     * DependencyProperty는 static으로 선언해야 한다.
+     */
     public partial class DateSpinControl : UserControl
     {
         #region Base
@@ -235,41 +238,85 @@ namespace UC
         #endregion
 
         #region Properties
-        private int _Hour = 0;
 
+        #region Hour
         public int Hour
         {
-            get => _Hour;
-            set
-            {
-                _Hour = value;
-                OnPropertyChanged();
-            }
+            get => (int)GetValue(HourDependency);
+            set => SetValue(HourDependency, value);
         }
 
-        private int _Minute = 0;
+        /*
+        private static readonly DependencyProperty HourDependency = DependencyProperty.Register(
+            nameof(Hour), 
+            typeof(int), 
+            typeof(DateSpinControl),
+            new FrameworkPropertyMetadata(new PropertyChangedCallback(HourPropertyChanged))
+            );
 
+        private static void HourPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            DateSpinControl _Control = obj as DateSpinControl;
+            _Control.tbHour.Text = e.NewValue.ToString();
+        }
+        */
+
+        private static readonly DependencyProperty HourDependency = DependencyProperty.Register(
+            nameof(Hour),
+            typeof(int),
+            typeof(DateSpinControl),
+            new FrameworkPropertyMetadata
+                {
+                    BindsTwoWayByDefault = true
+                }
+            );
+        #endregion
+
+        #region Minute
         public int Minute
         {
-            get => _Minute;
-            set
-            {
-                _Minute = value;
-                OnPropertyChanged();
-            }
+            get => (int)GetValue(MinuteDependency);
+            set => SetValue(MinuteDependency, value);
         }
 
-        private int _FontSize = 11;
+        /*
+        private static readonly DependencyProperty MinuteDependency = DependencyProperty.Register(
+            nameof(Minute),
+            typeof(int),
+            typeof(DateSpinControl),
+            new FrameworkPropertyMetadata(new PropertyChangedCallback(MinutePropertyChanged))
+            );
 
+        private static void MinutePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            DateSpinControl _Control = obj as DateSpinControl;
+            _Control.tbMinute.Text = e.NewValue.ToString();
+        }
+        */
+
+        private static readonly DependencyProperty MinuteDependency = DependencyProperty.Register(
+            nameof(Minute),
+            typeof(int),
+            typeof(DateSpinControl),
+            new FrameworkPropertyMetadata
+                {
+                    BindsTwoWayByDefault = true
+                }
+            );
+        #endregion
+
+        #region FontSize
         public new int FontSize
         {
-            get => _FontSize;
-            set
-            {
-                _FontSize = value;
-                OnPropertyChanged();
-            }
+            get => (int)GetValue(FontSizeDependency);
+            set => SetValue(FontSizeDependency, value);
         }
+
+        private static readonly DependencyProperty FontSizeDependency = DependencyProperty.Register(nameof(FontSize), typeof(int), typeof(DateSpinControl), new FrameworkPropertyMetadata
+        {
+            BindsTwoWayByDefault = true,
+        });
+        #endregion
 
         #region HourUp 삼각형 Point 좌표
         private PointCollection _HourUpPoint = new PointCollection(new Point[] { new Point(5, 10), new Point(15, 10), new Point(25, 10) });

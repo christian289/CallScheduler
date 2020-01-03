@@ -4,12 +4,27 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:UC"
-             mc:Ignorable="d" d:DesignWidth="200" Height="220" Loaded="UserControl_Loaded"
-             >
+             xmlns:cnvt="clr-namespace:CallScheduler.Global"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d"
+             Name="DTPUC"
+             d:DesignWidth="200" 
+             Height="220">
+    <UserControl.Resources>
+    </UserControl.Resources>
+    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
     <StackPanel>
         <Viewbox>
             <Calendar x:Name="ClnrDatePicker" SelectedDate="{Binding SelectedDate}"/>
         </Viewbox>
-        <local:DateSpinControl x:Name="SpDateController" Width="200"/>
+        <local:DateSpinControl x:Name="SpDateController" Width="200" 
+                               Hour="{Binding Hour}" 
+                               Minute="{Binding Minute}"/>
     </StackPanel>
 </UserControl>

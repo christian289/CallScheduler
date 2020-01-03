@@ -20,9 +20,6 @@ using System.Windows.Shapes;
 /// </summary>
 namespace UC
 {
-    /// <summary>
-    /// DateTimePickerControl.xaml에 대한 상호 작용 논리
-    /// </summary>
     public partial class DateTimePickerControl : UserControl
     {
         #region Base
@@ -136,7 +133,107 @@ namespace UC
                 CommandManagerHelper.CallWeakReferenceHandler(_CanExecuteChangedHandler);
             }
         }
-        
+
+        public class CommandBase<T> : ICommand
+        {
+            private List<WeakReference> _CanExecuteChangedHandler;
+            private readonly Predicate<T> _CanExecute;
+            private readonly Action<T> _Execute;
+
+            public CommandBase(Action<T> execute) : this(execute, null)
+            {
+            }
+
+            public CommandBase(Action<T> execute, Predicate<T> canExecute) : this(execute, canExecute, false)
+            {
+            }
+
+            public CommandBase(Action<T> execute, Predicate<T> canExecute, bool isAutomaticRequeryDisabled)
+            {
+                if (execute is null)
+                {
+                    throw new ArgumentException("executeMethod null");
+                }
+
+                _Execute = execute;
+                _CanExecute = canExecute;
+                _IsAutomaticRequeryDisabled = isAutomaticRequeryDisabled;
+            }
+
+            #region IsAutomaticRequeryDisabled Property
+            private bool _IsAutomaticRequeryDisabled = false;
+
+            public bool IsAutomaticRequeryDisabled
+            {
+                get => _IsAutomaticRequeryDisabled;
+                set
+                {
+                    _IsAutomaticRequeryDisabled = value;
+
+                    if (_IsAutomaticRequeryDisabled)
+                    {
+                        CommandManagerHelper.RemoveHandlersFromRequerySuggested(_CanExecuteChangedHandler);
+                    }
+                    else
+                    {
+                        CommandManagerHelper.AddHandlersToRequerySuggested(_CanExecuteChangedHandler);
+                    }
+                }
+            }
+            #endregion
+
+            public event EventHandler CanExecuteChanged
+            {
+                add
+                {
+                    if (!_IsAutomaticRequeryDisabled)
+                    {
+                        CommandManager.RequerySuggested += value;
+                    }
+                    else
+                    {
+                        CommandManagerHelper.AddWeakReferenceHandler(ref _CanExecuteChangedHandler, value, -1);
+                    }
+                }
+                remove
+                {
+                    if (!_IsAutomaticRequeryDisabled)
+                    {
+                        CommandManager.RequerySuggested -= value;
+                    }
+                    else
+                    {
+                        CommandManagerHelper.RemoveWeakReferenceHandler(_CanExecuteChangedHandler, value);
+                    }
+                }
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                if (_CanExecute is null)
+                {
+                    return true;
+                }
+
+                return _CanExecute((parameter is null) ? default(T) : (T)Convert.ChangeType(parameter, typeof(T)));
+            }
+
+            public void Execute(object parameter)
+            {
+                _Execute((parameter is null) ? default(T) : (T)Convert.ChangeType(parameter, typeof(T)));
+            }
+
+            public void RaiseCanExecuteChanged()
+            {
+                OnCanExecuteChanged();
+            }
+
+            protected virtual void OnCanExecuteChanged()
+            {
+                CommandManagerHelper.CallWeakReferenceHandler(_CanExecuteChangedHandler);
+            }
+        }
+
         public class CommandManagerHelper
         {
             public static void CallWeakReferenceHandler(List<WeakReference> handler)
@@ -239,7 +336,7 @@ namespace UC
 
         #region Properties
 
-        private DateTime _SelectedDate = DateTime.Now;
+        private DateTime _SelectedDate;
 
         public DateTime SelectedDate
         {
@@ -247,6 +344,8 @@ namespace UC
             set
             {
                 _SelectedDate = value;
+                Hour = _SelectedDate.Hour;
+                Minute = _SelectedDate.Minute;
                 OnPropertyChanged();
             }
         }
@@ -277,16 +376,30 @@ namespace UC
 
         #endregion
 
+        private ICommand _LoadedCommand;
+
+        public ICommand LoadedCommand
+        {
+            get
+            {
+                return _LoadedCommand ?? (_LoadedCommand = new CommandBase<object>(Loaded, CanExecute_Loaded, true));
+            }
+        }
+
+        private new void Loaded(object args)
+        {
+            SelectedDate = DateTime.Now;
+        }
+
+        private bool CanExecute_Loaded(object args)
+        {
+            return true;
+        }
+
         public DateTimePickerControl()
         {
             DataContext = this;
             InitializeComponent();
-        }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            SpDateController.Hour = DateTime.Now.Hour;
-            SpDateController.Minute = DateTime.Now.Minute;
         }
     }
 }
