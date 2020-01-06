@@ -20,6 +20,16 @@ using System.Windows.Shapes;
 /// </summary>
 namespace UC
 {
+    /// <summary>
+    /// 1. 의존 프로퍼티에서 get, set이 디버깅이 안 잡히는 이유
+    /// 의존 프로퍼티의 바인딩은 CLR wrapper (get, set)을 무시하고 기본 의존 프로퍼티를 직접 업데이트하여 성능을 향상시킨다.
+    /// 따라서 의존 프로퍼티의 set 에서 처리할 작업은 Callback 함수를 정의하여 작업한다.
+    /// 
+    /// 2. DependencyProperty 정의 시, ownerType에서 typeof(this.GetType())이 불가능한 이유
+    /// - static Method에서 this 키워드 사용 불가(가능 했다면 this.GetType()으로 해도 되었을 듯.)
+    /// - 위 방식이 불가하기 때문에 타입을 직접 넘겨야 함. PropertyFromName에 등록할 때 Type명을 DependencyProperty의 key값으로 사용. (해당 타입에 대한 특정한 속성은 유일해야 하기 때문)
+    /// - 컨트롤 하나에 동일한 속성이 중복될 수 없는 이유가 위와 같을 것이다.
+    /// </summary>
     public partial class DateTimePickerControl : UserControl
     {
         #region Base
@@ -335,66 +345,96 @@ namespace UC
         #endregion
 
         #region Properties
-
-        private DateTime _SelectedDate;
-
         public DateTime SelectedDate
         {
-            get => _SelectedDate;
-            set
-            {
-                _SelectedDate = value;
-                Hour = _SelectedDate.Hour;
-                Minute = _SelectedDate.Minute;
-                OnPropertyChanged();
-            }
+            get => (DateTime)GetValue(SelectedDateProperty);
+            set => SetValue(SelectedDateProperty, value);
         }
 
-        private int _Hour = 0;
+        private static readonly DependencyProperty SelectedDateProperty = DependencyProperty.Register(
+            nameof(SelectedDate),
+            typeof(DateTime),
+            typeof(DateTimePickerControl),
+            new FrameworkPropertyMetadata(
+                new DateTime(2020, 1, 1, 0, 0 ,0),
+                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                new PropertyChangedCallback(SelectedDatePropertyChanged)
+                )
+            );
+
+        private static void SelectedDatePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            DateTimePickerControl _Control = obj as DateTimePickerControl;
+            DateTime NewValue = (DateTime)e.NewValue;
+
+            _Control.Hour = NewValue.Hour;
+            _Control.Minute = NewValue.Minute;
+        }
 
         public int Hour
         {
-            get => _Hour;
-            set
-            {
-                _Hour = value;
-                OnPropertyChanged();
-            }
+            get => (int)GetValue(HourProperty);
+            set => SetValue(HourProperty, value);
         }
 
-        private int _Minute = 0;
+        private static readonly DependencyProperty HourProperty = DependencyProperty.Register(
+            nameof(Hour),
+            typeof(int),
+            typeof(DateTimePickerControl),
+            new FrameworkPropertyMetadata(
+                0,
+                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                new PropertyChangedCallback(HourPropertyChanged)
+                )
+            );
+
+        private static void HourPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+        }
 
         public int Minute
         {
-            get => _Minute;
-            set
-            {
-                _Minute = value;
-                OnPropertyChanged();
-            }
+            get => (int)GetValue(MinuteProperty);
+            set => SetValue(MinuteProperty, value);
+        }
+
+        private static readonly DependencyProperty MinuteProperty = DependencyProperty.Register(
+            nameof(Minute),
+            typeof(int),
+            typeof(DateTimePickerControl),
+            new FrameworkPropertyMetadata(
+                0,
+                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                new PropertyChangedCallback(MinutePropertyChanged)
+                )
+            );
+
+        private static void MinutePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+        }
+
+        public new int FontSize
+        {
+            get => (int)GetValue(FontSizeProperty);
+            set => SetValue(FontSizeProperty, value);
+        }
+
+        private new static readonly DependencyProperty FontSizeProperty = DependencyProperty.Register(
+            nameof(FontSize),
+            typeof(int),
+            typeof(DateTimePickerControl),
+            new FrameworkPropertyMetadata(
+                0,
+                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                new PropertyChangedCallback(FontSizePropertyChanged)
+                )
+            );
+
+        private static void FontSizePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
         }
 
         #endregion
-
-        private ICommand _LoadedCommand;
-
-        public ICommand LoadedCommand
-        {
-            get
-            {
-                return _LoadedCommand ?? (_LoadedCommand = new CommandBase<object>(Loaded, CanExecute_Loaded, true));
-            }
-        }
-
-        private new void Loaded(object args)
-        {
-            SelectedDate = DateTime.Now;
-        }
-
-        private bool CanExecute_Loaded(object args)
-        {
-            return true;
-        }
 
         public DateTimePickerControl()
         {

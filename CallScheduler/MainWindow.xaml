@@ -8,11 +8,18 @@
         xmlns:UC="clr-namespace:UC"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="알람관리" Height="900" Width="800">
+        Title="알람관리" Height="900" Width="800"
+        Name="WndMain">
     <Window.Resources>
         <cnvt:PopupDateTimeConverter x:Key="PopupDateTimeConverter"/>
         <cnvt:ContentDateTimeConverter x:Key="ContentDateTimeConverter"/>
     </Window.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
     <Grid x:Name="GrdMain">
         <Grid.ColumnDefinitions>
@@ -104,10 +111,18 @@
                                  Converter="{StaticResource PopupDateTimeConverter}"/>
                     </Button.Content>
                 </Button>
-                <Popup x:Name="DTPAlarmTime" IsOpen="{Binding PpDTPAlarmTime}" PlacementTarget="{Binding ElementName=BtnTimerSet}" 
+                <Popup IsOpen="{Binding PpDTPAlarmTime}" PlacementTarget="{Binding ElementName=BtnTimerSet}" 
                        Placement="Right">
+                    
                     <Border BorderBrush="Black" BorderThickness="1" Background="AliceBlue" Width="200" Height="220">
-                        <UC:DateTimePickerControl/>
+                        <UC:DateTimePickerControl x:Name="DTPAlarmTime">
+                            <UC:DateTimePickerControl.SelectedDate>
+                                <Binding Path="DataContext.SelectedDate"
+                                         ElementName="WndMain"
+                                         Mode="TwoWay"
+                                         UpdateSourceTrigger="PropertyChanged"/>
+                            </UC:DateTimePickerControl.SelectedDate>
+                        </UC:DateTimePickerControl>
                     </Border>
                 </Popup>
                 <TextBox x:Name="TbTagerMemo" Grid.Column="1" Grid.Row="3" 
@@ -136,7 +151,7 @@
                         </ListView.View>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseDoubleClick">
-                                <i:InvokeCommandAction Command="{Binding MouseDoubleClickCommand}" />
+                                <i:InvokeCommandAction Command="{Binding DetailInfoViewOpenCommand}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ListView>
@@ -209,7 +224,6 @@
                          HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                          HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                          FontSize="30" Text="{Binding TargetKeyword, UpdateSourceTrigger=PropertyChanged}"/>
-                <!-- TextBox.Text Binding을 이처럼 할 수도 있다.-->
             </DockPanel>
             <Border BorderThickness="1" BorderBrush="WhiteSmoke" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                 <Image x:Name="ImgLoadedImage" Margin="10,10,10,10" Source="{Binding LoadedImage}"/>
@@ -218,6 +232,7 @@
                 <TextBox.Text>
                     <Binding Path="InputText" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
                 </TextBox.Text>
+                <!-- TextBox.Text Binding을 이처럼 할 수도 있다.-->
             </TextBox>
             <Button x:Name="BtnFindImage" Grid.Row="3" Grid.Column="0"
                     Content="이미지 불러오기" FontSize="28"

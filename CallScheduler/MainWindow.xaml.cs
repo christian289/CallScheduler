@@ -22,22 +22,12 @@ using System.Xml;
 
 namespace CallScheduler
 {
-    /// <summary>
-    /// MainWindow.xaml에 대한 상호 작용 논리
-    /// </summary>
     public partial class MainWindow : Window
     {
-        private MainViewModel _MainModel { get; set; }
-
         public MainWindow()
         {
-            _MainModel = new MainViewModel();
-            DataContext = _MainModel;
-
+            DataContext = new MainViewModel();
             InitializeComponent();
-
-            _MainModel.SourceFilePath = Directory.GetCurrentDirectory() + @"\Data.xml";
-            _MainModel.Model = new ObservableCollection<DataModel>(DataXML.XmlLoad(_MainModel.SourceFilePath));
         }
     }
 }

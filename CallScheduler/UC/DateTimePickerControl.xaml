@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:UC"
+             xmlns:UC="clr-namespace:UC"
              xmlns:cnvt="clr-namespace:CallScheduler.Global"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
@@ -13,18 +13,14 @@
     <UserControl.Resources>
     </UserControl.Resources>
     
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
-    
     <StackPanel>
         <Viewbox>
-            <Calendar x:Name="ClnrDatePicker" SelectedDate="{Binding SelectedDate}"/>
+            <Calendar x:Name="ClnrDatePicker" SelectedDate="{Binding SelectedDateTime}"/>
         </Viewbox>
-        <local:DateSpinControl x:Name="SpDateController" Width="200" 
-                               Hour="{Binding Hour}" 
-                               Minute="{Binding Minute}"/>
+        <UC:DateSpinControl x:Name="SpDateController" Width="200" 
+                            Hour="{Binding Path=DataContext.Hour, ElementName=DTPUC, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                            Minute="{Binding Path=DataContext.Minute, ElementName=DTPUC, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            FontSize="{Binding Path=DataContext.FontSize, ElementName=DTPUC, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            />
     </StackPanel>
 </UserControl>

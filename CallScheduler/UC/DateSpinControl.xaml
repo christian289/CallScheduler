@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:UC"
              mc:Ignorable="d" 
-             d:DesignHeight="30" d:DesignWidth="300">
+             d:DesignHeight="30" d:DesignWidth="300"
+             Name="DSCMain">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -21,10 +22,12 @@
         </Grid.RowDefinitions>
 
         <TextBox x:Name="tbHour" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" TextAlignment="Right"
-                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="{Binding FontSize}"
-                 Text="{Binding Hour, UpdateSourceTrigger=PropertyChanged}"/>
+                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                 FontSize="{Binding FontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Text="{Binding Path=Hour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <Rectangle Grid.Column="1" Grid.RowSpan="2" Fill="White"/>
-        <TextBlock x:Name="tbHourCaption" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Text="시" VerticalAlignment="Center" TextAlignment="Center"/>
+        <TextBlock x:Name="tbHourCaption" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Text="시" VerticalAlignment="Center" TextAlignment="Center"
+                   FontSize="{Binding FontSize}"/>
         <Button x:Name="btnHourUp" Grid.Row="0" Grid.Column="2" Command="{Binding HourUpCommand}">
             <Polygon Width="{Binding ElementName=btnHourUp.Width}" Height="{Binding ElementName=btnHourUp.Height}"
              Fill="Red" Stroke="Red" StrokeThickness="1" Points="{Binding HourDownPoint}"/>
@@ -34,8 +37,9 @@
              Fill="Red" Stroke="Red" StrokeThickness="1" Points="{Binding HourDownPoint}"/>
         </Button>
         <TextBox x:Name="tbMinute" Grid.Row="0" Grid.Column="3" Grid.RowSpan="2" TextAlignment="Right" 
-                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="{Binding FontSize}"
-                 Text="{Binding Minute, UpdateSourceTrigger=PropertyChanged}"/>
+                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                 FontSize="{Binding FontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Text="{Binding Path=Minute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <Rectangle Grid.Column="4" Grid.RowSpan="2" Fill="White"/>
         <TextBlock x:Name="tbMinuteCaption" Grid.Row="0" Grid.Column="4" Grid.RowSpan="2" Text="분" VerticalAlignment="Center" TextAlignment="Center"/>
         <Button x:Name="btnMinuteUp" Grid.Row="0" Grid.Column="5" Command="{Binding MinuteUpCommand}">

@@ -308,6 +308,21 @@ namespace CallScheduler.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        private DateTime _SelectedDate;
+
+        public DateTime SelectedDate
+        {
+            get => _SelectedDate;
+            set
+            {
+                if (_SelectedDate != value)
+                {
+                    _SelectedDate = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         #endregion
 
         #region 알람 상세 팝업
@@ -646,7 +661,14 @@ namespace CallScheduler.ViewModel
 
         private void DetailInfoViewOpen()
         {
-            PpDetailInfoView = true;
+            if (!PpDetailInfoView)
+            {
+                PpDetailInfoView = true;
+            }
+            else
+            {
+                PpDetailInfoView = false;
+            }
         }
 
         private bool CanExecute_DetailInfoViewOpen()
@@ -677,32 +699,32 @@ namespace CallScheduler.ViewModel
         }
         #endregion
 
-        private ICommand _MouseDoubleClickCommand;
+        #endregion
 
-        public ICommand MouseDoubleClickCommand
+        #region Trigger
+        private ICommand _LoadedCommand;
+
+        public ICommand LoadedCommand
         {
             get
             {
-                return _MouseDoubleClickCommand ?? (_MouseDoubleClickCommand = new CommandBase<object>(MouseDoubleClick, CanExecute_MouseDoubleClick, true));
+                return _LoadedCommand ?? (_LoadedCommand = new CommandBase<object>(Loaded, CanExecute_Loaded, true));
             }
         }
 
-        private void MouseDoubleClick(object args)
+        private void Loaded(object args)
         {
-            if (!PpDetailInfoView)
-            {
-                PpDetailInfoView = true;
-            }
-            else
-            {
-                PpDetailInfoView = false;
-            }
+            SelectedDate = DateTime.Now;
+
+            SourceFilePath = Directory.GetCurrentDirectory() + @"\Data.xml";
+            Model = new ObservableCollection<DataModel>(DataXML.XmlLoad(SourceFilePath));
         }
 
-        private bool CanExecute_MouseDoubleClick(object args)
+        private bool CanExecute_Loaded(object args)
         {
             return true;
         }
+
         #endregion
 
         #region 기능 함수

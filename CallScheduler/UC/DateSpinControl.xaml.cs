@@ -21,7 +21,7 @@ using System.Windows.Shapes;
 namespace UC
 {
     /*
-     * DependencyProperty는 static으로 선언해야 한다.
+     * DependencyProperty는 static readonly 으로 선언해야 한다.
      */
     public partial class DateSpinControl : UserControl
     {
@@ -239,83 +239,82 @@ namespace UC
 
         #region Properties
 
+        #region Dependency Properties
+
         #region Hour
         public int Hour
         {
-            get => (int)GetValue(HourDependency);
-            set => SetValue(HourDependency, value);
+            get => (int)GetValue(HourProperty);
+            set => SetValue(HourProperty, value);
         }
 
-        /*
-        private static readonly DependencyProperty HourDependency = DependencyProperty.Register(
-            nameof(Hour), 
-            typeof(int), 
+        private static readonly DependencyProperty HourProperty = DependencyProperty.Register(
+            nameof(Hour),
+            typeof(int),
             typeof(DateSpinControl),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(HourPropertyChanged))
+            new FrameworkPropertyMetadata(
+                0,
+                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                new PropertyChangedCallback(HourPropertyChanged)
+                )
             );
 
         private static void HourPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             DateSpinControl _Control = obj as DateSpinControl;
-            _Control.tbHour.Text = e.NewValue.ToString();
+            _Control.Hour = (int)e.NewValue;
         }
-        */
-
-        private static readonly DependencyProperty HourDependency = DependencyProperty.Register(
-            nameof(Hour),
-            typeof(int),
-            typeof(DateSpinControl),
-            new FrameworkPropertyMetadata
-                {
-                    BindsTwoWayByDefault = true
-                }
-            );
         #endregion
 
         #region Minute
         public int Minute
         {
-            get => (int)GetValue(MinuteDependency);
-            set => SetValue(MinuteDependency, value);
+            get => (int)GetValue(MinuteProperty);
+            set => SetValue(MinuteProperty, value);
         }
 
-        /*
-        private static readonly DependencyProperty MinuteDependency = DependencyProperty.Register(
+        private static readonly DependencyProperty MinuteProperty = DependencyProperty.Register(
             nameof(Minute),
             typeof(int),
             typeof(DateSpinControl),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(MinutePropertyChanged))
+            new FrameworkPropertyMetadata(
+                0,
+                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                new PropertyChangedCallback(MinutePropertyChanged)
+                )
             );
 
         private static void MinutePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             DateSpinControl _Control = obj as DateSpinControl;
-            _Control.tbMinute.Text = e.NewValue.ToString();
+            _Control.Minute = (int)e.NewValue;
         }
-        */
-
-        private static readonly DependencyProperty MinuteDependency = DependencyProperty.Register(
-            nameof(Minute),
-            typeof(int),
-            typeof(DateSpinControl),
-            new FrameworkPropertyMetadata
-                {
-                    BindsTwoWayByDefault = true
-                }
-            );
         #endregion
 
         #region FontSize
         public new int FontSize
         {
-            get => (int)GetValue(FontSizeDependency);
-            set => SetValue(FontSizeDependency, value);
+            get => (int)GetValue(FontSizeProperty);
+            set => SetValue(FontSizeProperty, value);
         }
 
-        private static readonly DependencyProperty FontSizeDependency = DependencyProperty.Register(nameof(FontSize), typeof(int), typeof(DateSpinControl), new FrameworkPropertyMetadata
+        private new static readonly DependencyProperty FontSizeProperty = DependencyProperty.Register(
+            nameof(FontSize),
+            typeof(int), 
+            typeof(DateSpinControl),
+            new FrameworkPropertyMetadata(new PropertyChangedCallback(FontSizePropertyChanged))
+            );
+
+        private static void FontSizePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
-            BindsTwoWayByDefault = true,
-        });
+            DateSpinControl _Control = obj as DateSpinControl;
+            _Control.tbHour.FontSize = (int)e.NewValue;
+            _Control.tbMinute.FontSize = (int)e.NewValue;
+            _Control.tbHourCaption.FontSize = (int)e.NewValue;
+            _Control.tbMinuteCaption.FontSize = (int)e.NewValue;
+        }
+        #endregion
+
         #endregion
 
         #region HourUp 삼각형 Point 좌표
