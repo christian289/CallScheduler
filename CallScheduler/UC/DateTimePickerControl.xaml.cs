@@ -360,8 +360,7 @@ namespace UC
             new FrameworkPropertyMetadata(
                 new DateTime(2020, 1, 1, 0, 0 ,0),
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                new PropertyChangedCallback(SelectedDatePropertyChanged),
-                new CoerceValueCallback(SelectedDateCoerceValue)
+                new PropertyChangedCallback(SelectedDatePropertyChanged)
                 )
             );
 
@@ -372,16 +371,6 @@ namespace UC
 
             obj.Hour = NewValue.Hour;
             obj.Minute = NewValue.Minute;
-        }
-
-        private static object SelectedDateCoerceValue(DependencyObject sender, object data)
-        {
-            if ((DateTime)data <= DateTime.Now)
-            {
-                data = DateTime.Now;
-            }
-
-            return data;
         }
         #endregion
 
@@ -399,16 +388,29 @@ namespace UC
             new FrameworkPropertyMetadata(
                 0,
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                new PropertyChangedCallback(HourPropertyChanged)
+                new PropertyChangedCallback(HourPropertyChanged),
+                new CoerceValueCallback(HourCoerceValue)
                 )
             );
 
         private static void HourPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             DateTimePickerControl obj = sender as DateTimePickerControl;
-            int NewHour = (int)e.NewValue;
+            obj.SelectedDate = ChangeTime(obj.SelectedDate, (int)e.NewValue, obj.SelectedDate.Minute);
+        }
 
-            obj.SelectedDate = ChangeTime(obj.SelectedDate, NewHour, obj.SelectedDate.Minute);
+        private static object HourCoerceValue(DependencyObject sender, object data)
+        {
+            if ((int)data >= 24)
+            {
+                data = 0;
+            }
+            else if ((int)data < 0)
+            {
+                data = 23;
+            }
+
+            return data;
         }
         #endregion
 
@@ -426,16 +428,29 @@ namespace UC
             new FrameworkPropertyMetadata(
                 0,
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                new PropertyChangedCallback(MinutePropertyChanged)
+                new PropertyChangedCallback(MinutePropertyChanged),
+                new CoerceValueCallback(MinuteCoerceValue)
                 )
             );
 
         private static void MinutePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             DateTimePickerControl obj = sender as DateTimePickerControl;
-            int NewMinute = (int)e.NewValue;
+            obj.SelectedDate = ChangeTime(obj.SelectedDate, obj.SelectedDate.Hour, (int)e.NewValue);
+        }
 
-            obj.SelectedDate = ChangeTime(obj.SelectedDate, obj.SelectedDate.Hour, NewMinute);
+        private static object MinuteCoerceValue(DependencyObject sender, object data)
+        {
+            if ((int)data >= 60)
+            {
+                data = 0;
+            }
+            else if ((int)data < 0)
+            {
+                data = 59;
+            }
+
+            return data;
         }
         #endregion
 
@@ -453,12 +468,23 @@ namespace UC
             new FrameworkPropertyMetadata(
                 0,
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                new PropertyChangedCallback(FontSizePropertyChanged)
+                new PropertyChangedCallback(FontSizePropertyChanged),
+                new CoerceValueCallback(FontSizeCoerceValue)
                 )
             );
 
         private static void FontSizePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
+        }
+
+        private static object FontSizeCoerceValue(DependencyObject sender, object data)
+        {
+            if ((int)data <= 7)
+            {
+                data = 11;
+            }
+
+            return data;
         }
         #endregion
 

@@ -13,6 +13,7 @@
     <Window.Resources>
         <cnvt:PopupDateTimeConverter x:Key="PopupDateTimeConverter"/>
         <cnvt:ContentDateTimeConverter x:Key="ContentDateTimeConverter"/>
+        <cnvt:DateTimeConverter x:Key="DateTimeConverter"/>
         <cnvt:VisibilityConverter x:Key="VisibilityConverter"/>
     </Window.Resources>
 
@@ -199,12 +200,12 @@
                                                 DisplayMemberBinding="{Binding Name}"/>
                                 <GridViewColumn x:Name="ColPhoneNumber" 
                                                 Header="전화번호" 
-                                                Width="90" 
+                                                Width="110" 
                                                 DisplayMemberBinding="{Binding PhoneNumber}"/>
                                 <GridViewColumn x:Name="ColAlarmTime" 
                                                 Header="시간" 
-                                                Width="150" 
-                                                DisplayMemberBinding="{Binding AlarmTime}"/>
+                                                Width="160" 
+                                                DisplayMemberBinding="{Binding AlarmTime, Converter={StaticResource DateTimeConverter}}"/>
                                 <GridViewColumn x:Name="ColMemo" 
                                                 Header="메모" 
                                                 Width="1000" 
@@ -216,8 +217,7 @@
                                 <i:InvokeCommandAction Command="{Binding DetailInfoViewOpenCommand}" />
                             </i:EventTrigger>
                             <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding LvGuestListSelectionChangedCommand}" 
-                                                       CommandParameter="{Binding SelectedItem, ElementName=LvGuestList}"/>
+                                <i:InvokeCommandAction Command="{Binding LvGuestListSelectionChangedCommand}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ListView>
@@ -286,10 +286,10 @@
                         <Label x:Name="LblAlarmTimeContent" 
                                Grid.Column="1" 
                                Grid.Row="2" 
-                               Content="{Binding SelectedItem.AlarmTime, ElementName=LvGuestList}"
+                               Content="{Binding SelectedItem.AlarmTime, ElementName=LvGuestList, Converter={StaticResource DateTimeConverter}}"
                                VerticalAlignment="Center" 
                                HorizontalAlignment="Left"
-                               FontSize="30" Margin="10,0,0,0"/>
+                               FontSize="20" Margin="10,0,0,0"/>
                         <Label x:Name="LblMemo" 
                                Grid.Column="0" 
                                Grid.Row="3"

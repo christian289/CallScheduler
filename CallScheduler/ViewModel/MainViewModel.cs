@@ -653,6 +653,7 @@ namespace CallScheduler.ViewModel
             if (!PpDTPAlarmTime)
             {
                 PpDTPAlarmTime = true;
+                SelectedDate = ((DataModel)LvModel.SelectedItem).AlarmTime;
             }
             else
             {

@@ -27,8 +27,8 @@
         <UC:DateSpinControl x:Name="SpDateController" 
                             Grid.Row="1"
                             Width="200" 
-                            Hour="{Binding Path=DataContext.Hour, ElementName=DTPUC, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                            Minute="{Binding Path=DataContext.Minute, ElementName=DTPUC, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Hour="{Binding Path=DataContext.Hour, ElementName=DTPUC, Mode=TwoWay}" 
+                            Minute="{Binding Path=DataContext.Minute, ElementName=DTPUC, Mode=TwoWay}"
                             FontSize="{Binding Path=DataContext.FontSize, ElementName=DTPUC, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
 </UserControl>

@@ -255,14 +255,31 @@ namespace UC
             new FrameworkPropertyMetadata(
                 0,
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                new PropertyChangedCallback(HourPropertyChanged)
+                new PropertyChangedCallback(HourPropertyChanged),
+                new CoerceValueCallback(HourCoerceValue)
                 )
             );
 
-        private static void HourPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        private static void HourPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            DateSpinControl _Control = obj as DateSpinControl;
-            _Control.Hour = (int)e.NewValue;
+            DateSpinControl obj = sender as DateSpinControl;
+            int NewHour = (int)e.NewValue;
+
+            obj.Hour = (int)e.NewValue;
+        }
+
+        private static object HourCoerceValue(DependencyObject sender, object data)
+        {
+            if ((int)data >= 24)
+            {
+                data = 0;
+            }
+            else if ((int)data < 0)
+            {
+                data = 23;
+            }
+
+            return data;
         }
         #endregion
 
@@ -280,14 +297,29 @@ namespace UC
             new FrameworkPropertyMetadata(
                 0,
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                new PropertyChangedCallback(MinutePropertyChanged)
+                new PropertyChangedCallback(MinutePropertyChanged),
+                new CoerceValueCallback(MinuteCoerceValue)
                 )
             );
 
-        private static void MinutePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        private static void MinutePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            DateSpinControl _Control = obj as DateSpinControl;
-            _Control.Minute = (int)e.NewValue;
+            DateSpinControl obj = sender as DateSpinControl;
+            obj.Minute = (int)e.NewValue;
+        }
+
+        private static object MinuteCoerceValue(DependencyObject sender, object data)
+        {
+            if ((int)data >= 60)
+            {
+                data = 0;
+            }
+            else if ((int)data < 0)
+            {
+                data = 59;
+            }
+
+            return data;
         }
         #endregion
 
@@ -411,14 +443,7 @@ namespace UC
 
         private void HourUp()
         {
-            if (Hour >= 0 && Hour <= 22)
-            {
-                Hour++;
-            }
-            else
-            {
-                Hour = 0;
-            }
+            Hour++;
         }
 
         private bool CanExecute_HourUp()
@@ -440,14 +465,7 @@ namespace UC
 
         private void HourDown()
         {
-            if (Hour >= 1 && Hour <= 23)
-            {
-                Hour--;
-            }
-            else
-            {
-                Hour = 0;
-            }
+            Hour--;
         }
 
         private bool CanExecute_HourDown()
@@ -469,14 +487,7 @@ namespace UC
 
         private void MinuteUp()
         {
-            if (Minute >= 0 && Minute <= 58)
-            {
-                Minute++;
-            }
-            else
-            {
-                Minute = 0;
-            }
+            Minute++;
         }
 
         private bool CanExecute_MinuteUp()
@@ -498,14 +509,7 @@ namespace UC
 
         private void MinuteDown()
         {
-            if (Minute >= 1 && Minute <= 59)
-            {
-                Minute--;
-            }
-            else
-            {
-                Minute = 0;
-            }
+            Minute--;
         }
 
         private bool CanExecute_MinuteDown()
@@ -520,6 +524,11 @@ namespace UC
         {
             DataContext = this;
             InitializeComponent();
+        }
+
+        private static DateTime ChangeTime(DateTime dateTime, int hours, int minutes, int seconds = default, int milliseconds = default)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, hours, minutes, seconds, milliseconds, dateTime.Kind);
         }
     }
 }
