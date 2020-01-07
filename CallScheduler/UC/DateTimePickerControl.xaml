@@ -13,14 +13,22 @@
     <UserControl.Resources>
     </UserControl.Resources>
     
-    <StackPanel>
+    <Grid x:Name="GrdMain">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="30" MinHeight="30" MaxHeight="30"/>
+        </Grid.RowDefinitions>
+        
         <Viewbox>
-            <Calendar x:Name="ClnrDatePicker" SelectedDate="{Binding SelectedDateTime}"/>
+            <Calendar x:Name="ClnrDatePicker" 
+                      Grid.Row="0"
+                      SelectedDate="{Binding SelectedDate}"/>
         </Viewbox>
-        <UC:DateSpinControl x:Name="SpDateController" Width="200" 
+        <UC:DateSpinControl x:Name="SpDateController" 
+                            Grid.Row="1"
+                            Width="200" 
                             Hour="{Binding Path=DataContext.Hour, ElementName=DTPUC, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                             Minute="{Binding Path=DataContext.Minute, ElementName=DTPUC, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            FontSize="{Binding Path=DataContext.FontSize, ElementName=DTPUC, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            />
-    </StackPanel>
+                            FontSize="{Binding Path=DataContext.FontSize, ElementName=DTPUC, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+    </Grid>
 </UserControl>

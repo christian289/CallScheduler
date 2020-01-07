@@ -344,7 +344,9 @@ namespace UC
 
         #endregion
 
-        #region Properties
+        #region Dependency Properties
+
+        #region SelectedDate
         public DateTime SelectedDate
         {
             get => (DateTime)GetValue(SelectedDateProperty);
@@ -358,19 +360,32 @@ namespace UC
             new FrameworkPropertyMetadata(
                 new DateTime(2020, 1, 1, 0, 0 ,0),
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                new PropertyChangedCallback(SelectedDatePropertyChanged)
+                new PropertyChangedCallback(SelectedDatePropertyChanged),
+                new CoerceValueCallback(SelectedDateCoerceValue)
                 )
             );
 
-        private static void SelectedDatePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        private static void SelectedDatePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            DateTimePickerControl _Control = obj as DateTimePickerControl;
+            DateTimePickerControl obj = sender as DateTimePickerControl;
             DateTime NewValue = (DateTime)e.NewValue;
 
-            _Control.Hour = NewValue.Hour;
-            _Control.Minute = NewValue.Minute;
+            obj.Hour = NewValue.Hour;
+            obj.Minute = NewValue.Minute;
         }
 
+        private static object SelectedDateCoerceValue(DependencyObject sender, object data)
+        {
+            if ((DateTime)data <= DateTime.Now)
+            {
+                data = DateTime.Now;
+            }
+
+            return data;
+        }
+        #endregion
+
+        #region Hour
         public int Hour
         {
             get => (int)GetValue(HourProperty);
@@ -388,10 +403,16 @@ namespace UC
                 )
             );
 
-        private static void HourPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        private static void HourPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-        }
+            DateTimePickerControl obj = sender as DateTimePickerControl;
+            int NewHour = (int)e.NewValue;
 
+            obj.SelectedDate = ChangeTime(obj.SelectedDate, NewHour, obj.SelectedDate.Minute);
+        }
+        #endregion
+
+        #region Minute
         public int Minute
         {
             get => (int)GetValue(MinuteProperty);
@@ -409,10 +430,16 @@ namespace UC
                 )
             );
 
-        private static void MinutePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        private static void MinutePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-        }
+            DateTimePickerControl obj = sender as DateTimePickerControl;
+            int NewMinute = (int)e.NewValue;
 
+            obj.SelectedDate = ChangeTime(obj.SelectedDate, obj.SelectedDate.Hour, NewMinute);
+        }
+        #endregion
+
+        #region FontSize
         public new int FontSize
         {
             get => (int)GetValue(FontSizeProperty);
@@ -433,8 +460,14 @@ namespace UC
         private static void FontSizePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
         }
+        #endregion
 
         #endregion
+
+        private static DateTime ChangeTime(DateTime dateTime, int hours, int minutes, int seconds = default, int milliseconds = default)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, hours, minutes, seconds, milliseconds, dateTime.Kind);
+        }
 
         public DateTimePickerControl()
         {

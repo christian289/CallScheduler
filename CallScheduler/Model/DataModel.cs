@@ -16,8 +16,11 @@ namespace CallScheduler.Model
             get => _Name;
             set
             {
-                _Name = value;
-                OnPropertyChanged();
+                if (_Name != value)
+                {
+                    _Name = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -28,8 +31,11 @@ namespace CallScheduler.Model
             get => _PhoneNumber;
             set
             {
-                _PhoneNumber = value;
-                OnPropertyChanged();
+                if (_PhoneNumber != value)
+                {
+                    _PhoneNumber = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -40,8 +46,11 @@ namespace CallScheduler.Model
             get => _AlarmTime;
             set
             {
-                _AlarmTime = value;
-                OnPropertyChanged();
+                if (_AlarmTime != value)
+                {
+                    _AlarmTime = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -52,8 +61,11 @@ namespace CallScheduler.Model
             get => _Memo;
             set
             {
-                _Memo = value;
-                OnPropertyChanged();
+                if (_Memo != value)
+                {
+                    _Memo = value;
+                    OnPropertyChanged();
+                }
             }
         }
     }

@@ -302,23 +302,44 @@ namespace UC
             nameof(FontSize),
             typeof(int), 
             typeof(DateSpinControl),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(FontSizePropertyChanged))
+            new FrameworkPropertyMetadata(
+                11,
+                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, 
+                new PropertyChangedCallback(FontSizePropertyChanged),
+                new CoerceValueCallback(FontSizeCoerceValue)
+                )
             );
 
-        private static void FontSizePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        private static void FontSizePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            DateSpinControl _Control = obj as DateSpinControl;
-            _Control.tbHour.FontSize = (int)e.NewValue;
-            _Control.tbMinute.FontSize = (int)e.NewValue;
-            _Control.tbHourCaption.FontSize = (int)e.NewValue;
-            _Control.tbMinuteCaption.FontSize = (int)e.NewValue;
+            DateSpinControl obj = sender as DateSpinControl;
+            obj.TbHour.FontSize = (int)e.NewValue;
+            obj.TbMinute.FontSize = (int)e.NewValue;
+            obj.TbHourCaption.FontSize = (int)e.NewValue;
+            obj.TbMinuteCaption.FontSize = (int)e.NewValue;
+        }
+
+        /// <summary>
+        /// 속성 변경 시 불가능한 값 입력방지를 위한 유효성 검사 로직(값 강제 변환)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="data">변경되는 값</param>
+        /// <returns></returns>
+        private static object FontSizeCoerceValue(DependencyObject sender, object data)
+        {
+            if ((int)data <= 7)
+            {
+                data = 11;
+            }
+
+            return data;
         }
         #endregion
 
         #endregion
 
         #region HourUp 삼각형 Point 좌표
-        private PointCollection _HourUpPoint = new PointCollection(new Point[] { new Point(5, 10), new Point(15, 10), new Point(25, 10) });
+        private PointCollection _HourUpPoint = new PointCollection(new Point[] { new Point(8, 8), new Point(11, 4), new Point(14, 8) });
 
         public PointCollection HourUpPoint
         {
@@ -332,7 +353,7 @@ namespace UC
         #endregion
 
         #region HourDown 삼각형 Point 좌표
-        private PointCollection _HourDownPoint = new PointCollection(new Point[] { new Point(10, 15), new Point(15, 10), new Point(20, 15) });
+        private PointCollection _HourDownPoint = new PointCollection(new Point[] { new Point(8, 4), new Point(11, 8), new Point(14, 4) });
 
         public PointCollection HourDownPoint
         {
@@ -346,7 +367,7 @@ namespace UC
         #endregion
 
         #region MinuteUp 삼각형 Point 좌표
-        private PointCollection _MinuteUpPoint = new PointCollection(new Point[] { new Point(10, 15), new Point(15, 10), new Point(20, 15) });
+        private PointCollection _MinuteUpPoint = new PointCollection(new Point[] { new Point(8, 8), new Point(11, 4), new Point(14, 8) });
 
         public PointCollection MinuteUpPoint
         {
@@ -360,7 +381,7 @@ namespace UC
         #endregion
 
         #region MinuteDown 삼각형 Point 좌표
-        private PointCollection _MinuteDownPoint = new PointCollection(new Point[] { new Point(10, 15), new Point(15, 10), new Point(20, 15) });
+        private PointCollection _MinuteDownPoint = new PointCollection(new Point[] { new Point(8, 4), new Point(11, 8), new Point(14, 4) });
 
         public PointCollection MinuteDownPoint
         {

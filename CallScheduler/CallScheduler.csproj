@@ -78,6 +78,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Global\VisibilityConverter.cs" />
     <Compile Include="Global\ContentDateTimeConverter.cs" />
     <Compile Include="Global\PopupDateTimeConverter.cs" />
     <Compile Include="Model\PopupModel.cs" />

@@ -309,6 +309,21 @@ namespace CallScheduler.ViewModel
             }
         }
 
+        private bool _PpTextShowing = false;
+
+        public bool PpTextShowing
+        {
+            get => _PpTextShowing;
+            set
+            {
+                if (_PpTextShowing != value)
+                {
+                    _PpTextShowing = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private DateTime _SelectedDate;
 
         public DateTime SelectedDate
@@ -386,10 +401,14 @@ namespace CallScheduler.ViewModel
                 AddButtonName = "추가 완료";
                 Mode = CRUDmode.Create;
 
-                DataModel obj = new DataModel();
+                DataModel obj = new DataModel
+                {
+                    AlarmTime = DateTime.Now
+                };
                 Model.Add(obj);
                 LvModel.SelectedItem = obj;
                 LvModel.SelectedIndexNumber = Model.IndexOf(obj) + 1;
+                PpTextShowing = false;
             }
             else
             {
@@ -463,7 +482,6 @@ namespace CallScheduler.ViewModel
         private void Delete()
         {
             // 정말 삭제하겠는지 묻는 메세지 박스
-
             if (LvModel.SelectedItem != null)
             {
                 Model.Remove(LvModel.SelectedItem as DataModel);
@@ -534,7 +552,7 @@ namespace CallScheduler.ViewModel
                 LoadedImage = BitmapToBitmapSource(_Image);
             }
 
-            // WPF에서는 OpenFileDialog가 System.Windows.Forms 네임스페이스가 아닌,
+            // WPF에서는 OpenFileDialog가 System.WinMouws.Forms 네임스페이스가 아닌,
             // Microsoft.Win32 이기 때문에 Windows Forms에서 사용하던 OpenFileDialog가 아니다.
             // 이 OpenFileDialog는 ShowDialog() 시 return 값이 bool이 아닌 bool? 이므로 명시적으로 == true를 해줘야 한다.
         }
@@ -638,7 +656,9 @@ namespace CallScheduler.ViewModel
             }
             else
             {
+                PpTextShowing = true;
                 PpDTPAlarmTime = false;
+                ((DataModel)LvModel.SelectedItem).AlarmTime = SelectedDate;
             }
         }
 
@@ -702,6 +722,8 @@ namespace CallScheduler.ViewModel
         #endregion
 
         #region Trigger
+
+        #region MainView Loaded
         private ICommand _LoadedCommand;
 
         public ICommand LoadedCommand
@@ -724,6 +746,29 @@ namespace CallScheduler.ViewModel
         {
             return true;
         }
+        #endregion
+
+        #region LvGuestList SelectionChanged
+        private ICommand _LvGuestListSelectionChangedCommand;
+
+        public ICommand LvGuestListSelectionChangedCommand
+        {
+            get
+            {
+                return _LvGuestListSelectionChangedCommand ?? (_LvGuestListSelectionChangedCommand = new CommandBase<object>(LvGuestListSelectionChanged, CanExecute_LvGuestListSelectionChanged, true));
+            }
+        }
+
+        private void LvGuestListSelectionChanged(object args)
+        {
+            PpTextShowing = true;
+        }
+
+        private bool CanExecute_LvGuestListSelectionChanged(object args)
+        {
+            return true;
+        }
+        #endregion
 
         #endregion
 

@@ -16,8 +16,11 @@ namespace CallScheduler.Model
             get => _SelectedIndexNumber;
             set
             {
-                _SelectedIndexNumber = value;
-                OnPropertyChanged();
+                if (_SelectedIndexNumber != value)
+                {
+                    _SelectedIndexNumber = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -28,8 +31,11 @@ namespace CallScheduler.Model
             get => _SelectedItem;
             set
             {
-                _SelectedItem = value;
-                OnPropertyChanged();
+                if (_SelectedItem != value)
+                {
+                    _SelectedItem = value;
+                    OnPropertyChanged();
+                }
             }
         }
     }

@@ -21,34 +21,91 @@
             <RowDefinition Height="15" MaxHeight="15"/>
         </Grid.RowDefinitions>
 
-        <TextBox x:Name="tbHour" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" TextAlignment="Right"
-                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                 FontSize="{Binding FontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+        <TextBox x:Name="TbHour" 
+                 Grid.Column="0" 
+                 Grid.Row="0" 
+                 Grid.RowSpan="2" 
+                 TextAlignment="Right"
+                 VerticalContentAlignment="Center" 
+                 HorizontalContentAlignment="Center" 
+                 FontSize="{Binding Path=FontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  Text="{Binding Path=Hour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <Rectangle Grid.Column="1" Grid.RowSpan="2" Fill="White"/>
-        <TextBlock x:Name="tbHourCaption" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Text="시" VerticalAlignment="Center" TextAlignment="Center"
-                   FontSize="{Binding FontSize}"/>
-        <Button x:Name="btnHourUp" Grid.Row="0" Grid.Column="2" Command="{Binding HourUpCommand}">
-            <Polygon Width="{Binding ElementName=btnHourUp.Width}" Height="{Binding ElementName=btnHourUp.Height}"
-             Fill="Red" Stroke="Red" StrokeThickness="1" Points="{Binding HourDownPoint}"/>
+        <Rectangle Grid.Column="1" 
+                   Grid.Row="0" 
+                   Grid.RowSpan="2" 
+                   Fill="White"/>
+        <TextBlock x:Name="TbHourCaption" 
+                   Grid.Column="1" 
+                   Grid.Row="0" 
+                   Grid.RowSpan="2" 
+                   Text="시" 
+                   VerticalAlignment="Center" 
+                   TextAlignment="Center"
+                   FontSize="{Binding Path=FontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button x:Name="BtnHourUp" 
+                Grid.Column="2" 
+                Grid.Row="0" 
+                Command="{Binding HourUpCommand}">
+            <Polygon Width="25" 
+                     Height="15"
+                     Fill="Red" 
+                     Stroke="Red" 
+                     StrokeThickness="1" 
+                     Points="{Binding HourUpPoint}"/>
         </Button>
-        <Button x:Name="btnHourDown" Grid.Row="1" Grid.Column="2" Command="{Binding HourDownCommand}">
-            <Polygon Width="{Binding ElementName=btnHourUp.Width}" Height="{Binding ElementName=btnHourUp.Height}"
-             Fill="Red" Stroke="Red" StrokeThickness="1" Points="{Binding HourDownPoint}"/>
+        <Button x:Name="BtnHourDown" 
+                Grid.Column="2" 
+                Grid.Row="1" 
+                Command="{Binding HourDownCommand}">
+            <Polygon Width="25" 
+                     Height="15"
+                     Fill="Red" 
+                     Stroke="Red" 
+                     StrokeThickness="1" 
+                     Points="{Binding HourDownPoint}"/>
         </Button>
-        <TextBox x:Name="tbMinute" Grid.Row="0" Grid.Column="3" Grid.RowSpan="2" TextAlignment="Right" 
-                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                 FontSize="{Binding FontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+        <TextBox x:Name="TbMinute" 
+                 Grid.Column="3" 
+                 Grid.Row="0" 
+                 Grid.RowSpan="2" 
+                 TextAlignment="Right" 
+                 VerticalContentAlignment="Center" 
+                 HorizontalContentAlignment="Center" 
+                 FontSize="{Binding Path=FontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  Text="{Binding Path=Minute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <Rectangle Grid.Column="4" Grid.RowSpan="2" Fill="White"/>
-        <TextBlock x:Name="tbMinuteCaption" Grid.Row="0" Grid.Column="4" Grid.RowSpan="2" Text="분" VerticalAlignment="Center" TextAlignment="Center"/>
-        <Button x:Name="btnMinuteUp" Grid.Row="0" Grid.Column="5" Command="{Binding MinuteUpCommand}">
-            <Polygon Width="{Binding ElementName=btnHourUp.Width}" Height="{Binding ElementName=btnHourUp.Height}"
-             Fill="Red" Stroke="Red" StrokeThickness="1" Points="{Binding MinuteUpPoint}"/>
+        <Rectangle Grid.Column="4" 
+                   Grid.Row="0" 
+                   Grid.RowSpan="2" 
+                   Fill="White"/>
+        <TextBlock x:Name="TbMinuteCaption" 
+                   Grid.Column="4" 
+                   Grid.Row="0" 
+                   Grid.RowSpan="2" 
+                   Text="분" 
+                   VerticalAlignment="Center" 
+                   TextAlignment="Center"
+                   FontSize="{Binding Path=FontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button x:Name="BtnMinuteUp" 
+                Grid.Column="5" 
+                Grid.Row="0" 
+                Command="{Binding MinuteUpCommand}">
+            <Polygon Width="25" 
+                     Height="15"
+                     Fill="Red" 
+                     Stroke="Red" 
+                     StrokeThickness="1" 
+                     Points="{Binding MinuteUpPoint}"/>
         </Button>
-        <Button x:Name="btnMinuteDown" Grid.Row="1" Grid.Column="5" Command="{Binding MinuteDownCommand}">
-            <Polygon Width="{Binding ElementName=btnHourUp.Width}" Height="{Binding ElementName=btnHourUp.Height}"
-             Fill="Red" Stroke="Red" StrokeThickness="1" Points="{Binding MinuteDownPoint}"/>
+        <Button x:Name="BtnMinuteDown" 
+                Grid.Column="5" 
+                Grid.Row="1" 
+                Command="{Binding MinuteDownCommand}">
+            <Polygon Width="25" 
+                     Height="15"
+                     Fill="Red" 
+                     Stroke="Red" 
+                     StrokeThickness="1" 
+                     Points="{Binding MinuteDownPoint}"/>
         </Button>
     </Grid>
 </UserControl>
