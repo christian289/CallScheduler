@@ -13,28 +13,22 @@ namespace CallScheduler.Global
     /// </summary>
     public class TimerTask
     {
-        private DataModel _Target { get; set; }
         private DateTime AlarmTime { get; set; }
 
         public TimerTask(DataModel Target)
         {
-            _Target = Target;
+            AlarmTime = Target.AlarmTime;
         }
 
-        public async Task<bool> AlarmStart()
+        public bool AlarmStart()
         {
-            Func<bool> func = new Func<bool>(() =>
+            while (true)
             {
-                while (true)
+                if (DateTime.Compare(DateTime.Now, AlarmTime) == 0)
                 {
-                    if (DateTime.Now == AlarmTime)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
-            });
-
-            return await Task.Run(func);
+            }
         }
     }
 }

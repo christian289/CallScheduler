@@ -366,6 +366,11 @@ namespace CallScheduler.ViewModel
         /// </summary>
         public ListViewModel LvModel { get; set; } = new ListViewModel();
 
+        /// <summary>
+        /// 전역 알람 관리 객체
+        /// </summary>
+        private List<Task<bool>> _TimerTask { get; set; } = new List<Task<bool>>();
+
         #endregion
 
         public MainViewModel()
@@ -741,6 +746,18 @@ namespace CallScheduler.ViewModel
 
             SourceFilePath = Directory.GetCurrentDirectory() + @"\Data.xml";
             Model = new ObservableCollection<DataModel>(DataXML.XmlLoad(SourceFilePath));
+
+            foreach(DataModel obj in Model)
+            {
+                TimerTask timerTask = new TimerTask(obj);
+                Task<bool> task = new Task<bool>(timerTask.AlarmStart);
+                _TimerTask.Add(task);
+                task.Start();
+
+                /// 알람 시작, 알람 정지 버튼이 있어야 할 것 같다.
+                /// Task를 만들고 실시간으로 수정되고 추가된 Task들이 알람 시작 시 생성.
+                /// 정지 시 제거되어야 할 것 같다.
+            }
         }
 
         private bool CanExecute_Loaded(object args)
@@ -828,6 +845,8 @@ namespace CallScheduler.ViewModel
         {
             return Imaging.CreateBitmapSourceFromHBitmap(source.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
         }
+
+
         #endregion
     }
 }
