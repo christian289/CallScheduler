@@ -32,7 +32,7 @@
         <Grid x:Name="GrdAlarm" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
-                <RowDefinition Height="200"/>
+                <RowDefinition Height="250"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
@@ -47,24 +47,20 @@
                 <Button x:Name="BtnNew" 
                         Grid.Column="0"
                         Content="{Binding AddButtonName}"
-                        Command="{Binding NewCommand}"
-                        IsEnabled="{Binding NewButtonController}"/>
+                        Command="{Binding NewCommand}"/>
                 <Button x:Name="BtnEdit" 
                         Grid.Column="1"
                         Content="{Binding EditButtonName}"
-                        Command="{Binding EditCommand}"
-                        IsEnabled="{Binding EditButtonController}"/>
+                        Command="{Binding EditCommand}"/>
                 <Button x:Name="BtnDelete" 
                         Grid.Column="2"
                         Content="알람 삭제"
-                        Command="{Binding DeleteCommand}"
-                        IsEnabled="{Binding DeleteButtonController}"/>
+                        Command="{Binding DeleteCommand}"/>
                 <Button x:Name="BtnSave" 
                         Grid.Column="3"
                         Content="알람 저장"
                         Command="{Binding SaveCommand}" 
-                        CommandParameter="{Binding SourceFilePath}"
-                        IsEnabled="{Binding SaveButtonController}"/>
+                        CommandParameter="{Binding SourceFilePath}"/>
             </Grid>
 
             <Grid x:Name="GrdAlarmViewer" Grid.Row="1" Margin="10,10,10,10">
@@ -77,6 +73,7 @@
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
+                    <RowDefinition Height="50"/>
                 </Grid.RowDefinitions>
 
                 <Label x:Name="LblTargetName" 
@@ -181,6 +178,14 @@
                          IsEnabled="{Binding MemoTextboxController}" 
                          FontSize="18"
                          Text="{Binding SelectedItem.Memo, ElementName=LvGuestList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button x:Name="BtnAlarmState"
+                        Grid.Column="0" 
+                        Grid.Row="4"
+                        Grid.ColumnSpan="2"
+                        Margin="50,8,50,8"
+                        Content="{Binding AlarmStateString}"
+                        Command="{Binding BtnAlarmStateCommand}"
+                        IsEnabled="{Binding BtnAlarmStateController}"/>
             </Grid>
 
             <Grid x:Name="GrdAlarmList" 
@@ -190,6 +195,7 @@
                           FontSize="20">
                     <ListView x:Name="LvGuestList" 
                               FontSize="14"
+                              
                               ItemsSource="{Binding Model}"
                               SelectedItem="{Binding LvModel.SelectedItem}">
                         <ListView.View>
@@ -289,7 +295,7 @@
                                Content="{Binding SelectedItem.AlarmTime, ElementName=LvGuestList, Converter={StaticResource DateTimeConverter}}"
                                VerticalAlignment="Center" 
                                HorizontalAlignment="Left"
-                               FontSize="20" Margin="10,0,0,0"/>
+                               FontSize="30" Margin="10,0,0,0"/>
                         <Label x:Name="LblMemo" 
                                Grid.Column="0" 
                                Grid.Row="3"
@@ -303,7 +309,7 @@
                                    Text="{Binding SelectedItem.Memo, ElementName=LvGuestList}"
                                    VerticalAlignment="Center" 
                                    HorizontalAlignment="Left"
-                                   FontSize="30" 
+                                   FontSize="20" 
                                    Margin="5,0,0,0"/>
                         <Button x:Name="BtnDetailInfoClose" 
                                 Grid.Column="0" 
@@ -417,27 +423,27 @@
                            Grid.Row="0" 
                            TextAlignment="Center" 
                            FontSize="15"
-                           Text="{Binding PpModel.AlarmTime, Converter={StaticResource PopupDateTimeConverter}}"/>
+                           Text="{Binding PpAlarmDateTime, Converter={StaticResource PopupDateTimeConverter}}"/>
                 <TextBlock x:Name="TbkName" 
                            Grid.Column="1" 
                            Grid.Row="0" 
                            TextAlignment="Center" 
                            FontSize="30"
-                           Text="{Binding PpModel.Name}"/>
+                           Text="{Binding PpAlarmName}"/>
                 <TextBlock x:Name="TbkPhoneNumber" 
                            Grid.Column="0" 
                            Grid.Row="1" 
                            Grid.ColumnSpan="2" 
                            TextAlignment="Center" 
                            FontSize="30"
-                           Text="{Binding PpModel.PhoneNumber}"/>
+                           Text="{Binding PpAlarmPhoneNumber}"/>
                 <TextBlock x:Name="TbkMemo" 
                            Grid.Column="0" 
                            Grid.Row="2" 
                            Grid.ColumnSpan="2"
                            FontSize="17" 
                            Foreground="PaleVioletRed"
-                           Text="{Binding PpModel.Memo}"/>
+                           Text="{Binding PpAlarmMemo}"/>
                 <Button x:Name="BtnOK" 
                         Grid.Column="0" 
                         Grid.Row="3" 

@@ -82,7 +82,6 @@
     <Compile Include="Global\VisibilityConverter.cs" />
     <Compile Include="Global\ContentDateTimeConverter.cs" />
     <Compile Include="Global\PopupDateTimeConverter.cs" />
-    <Compile Include="Model\PopupModel.cs" />
     <Compile Include="UC\DateTimePickerControl.xaml.cs">
       <DependentUpon>DateTimePickerControl.xaml</DependentUpon>
     </Compile>
@@ -98,7 +97,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Global\DataXML.cs" />
-    <Compile Include="Global\TimerTask.cs" />
     <Compile Include="Global\WindowInfo.cs" />
     <Compile Include="Helper\ConversionHelper.cs" />
     <Compile Include="Helper\StringHelper.cs" />
