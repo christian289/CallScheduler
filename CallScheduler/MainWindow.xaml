@@ -195,9 +195,9 @@
                           FontSize="20">
                     <ListView x:Name="LvGuestList" 
                               FontSize="14"
-                              
                               ItemsSource="{Binding Model}"
-                              SelectedItem="{Binding LvModel.SelectedItem}">
+                              SelectedItem="{Binding LvModel.SelectedItem}"
+                              IsEnabled="{Binding LvGuestListEnable}">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn x:Name="ColName" 
@@ -205,7 +205,8 @@
                                                 Width="60">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Name}" Foreground="{Binding ItemColor}"/>
+                                            <TextBlock Text="{Binding Name}" 
+                                                       Foreground="{Binding ItemColor}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -214,7 +215,8 @@
                                                 Width="110">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding PhoneNumber}" Foreground="{Binding ItemColor}"/>
+                                            <TextBlock Text="{Binding PhoneNumber}" 
+                                                       Foreground="{Binding ItemColor}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -237,7 +239,8 @@
                                                 Width="1000">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Memo}" Foreground="{Binding ItemColor}"/>
+                                            <TextBlock Text="{Binding Memo}" 
+                                                       Foreground="{Binding ItemColor}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>

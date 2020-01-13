@@ -401,6 +401,23 @@ namespace CallScheduler.ViewModel
         }
         #endregion
 
+        #region 고객 명단 사용가능 여부
+        private bool _LvGuestListEnable = true;
+
+        public bool LvGuestListEnable
+        {
+            get => _LvGuestListEnable;
+            set
+            {
+                if (_LvGuestListEnable != value)
+                {
+                    _LvGuestListEnable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        #endregion
+
         #endregion
 
         #region Field
@@ -452,11 +469,13 @@ namespace CallScheduler.ViewModel
                 LvModel.SelectedItem = obj;
                 LvModel.SelectedIndexNumber = Model.IndexOf(obj) + 1;
                 PpTextShowing = false;
+                LvGuestListEnable = false;
             }
             else
             {
                 AddButtonName = "알람 추가";
                 Mode = CRUDmode.Read;
+                LvGuestListEnable = true;
 
                 MessageBox.Show("추가 완료", "알람", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -464,7 +483,7 @@ namespace CallScheduler.ViewModel
 
         private bool CanExecute_New()
         {
-            if (Mode == CRUDmode.Running)
+            if (Mode == CRUDmode.Running || Mode == CRUDmode.Update)
             {
                 return false;
             }
@@ -512,7 +531,7 @@ namespace CallScheduler.ViewModel
 
         private bool CanExecute_Edit()
         {
-            if (Mode == CRUDmode.Running || LvModel.SelectedItem is null || Model.Count <= 0)
+            if (Mode == CRUDmode.Running || Mode == CRUDmode.Create || LvModel.SelectedItem is null || Model.Count <= 0)
             {
                 return false;
             }
@@ -550,7 +569,7 @@ namespace CallScheduler.ViewModel
 
         private bool CanExecute_Delete()
         {
-            if (Mode == CRUDmode.Running || LvModel.SelectedItem is null)
+            if (Mode == CRUDmode.Running || Mode == CRUDmode.Create || Mode == CRUDmode.Update || LvModel.SelectedItem is null)
             {
                 return false;
             }
@@ -589,7 +608,7 @@ namespace CallScheduler.ViewModel
 
         private bool CanExecute_Save()
         {
-            if (Mode == CRUDmode.Running)
+            if (Mode == CRUDmode.Running || Mode == CRUDmode.Create || Mode == CRUDmode.Update)
             {
                 return false;
             }
@@ -797,7 +816,7 @@ namespace CallScheduler.ViewModel
         }
         #endregion
 
-        #region 알람 시작 버튼 문구 변경
+        #region 알람 시작
         private ICommand _BtnAlarmStateCommand;
 
         public ICommand BtnAlarmStateCommand
@@ -813,17 +832,20 @@ namespace CallScheduler.ViewModel
             if (Mode == CRUDmode.Read)
             {
                 AlarmStateString = "알람중지";
-
                 tokenSource = new CancellationTokenSource();
 
                 foreach (DataModel obj in Model)
                 {
+                    if (OlderAlarmCheck(obj))
+                    {
+                        continue;
+                    }
+
                     Task.Factory.StartNew(() => 
                         AlarmTaskStart(obj, tokenSource.Token), tokenSource.Token)
                             .ContinueWith((returnValue) => {
                                 if (returnValue.Result)
                                 {
-                                    OlderAlarmCheck(obj);
                                     PpOpen = true;
                                 }
                             }
@@ -997,15 +1019,17 @@ namespace CallScheduler.ViewModel
             return Imaging.CreateBitmapSourceFromHBitmap(source.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
         }
 
-        private void OlderAlarmCheck(DataModel obj)
+        private bool OlderAlarmCheck(DataModel obj)
         {
             if (DateTime.Compare(obj.AlarmTime, DateTime.Now) < 0)
             {
                 obj.ItemColor = System.Windows.Media.Brushes.Red;
+                return true;
             }
             else
             {
                 obj.ItemColor = System.Windows.Media.Brushes.DarkSeaGreen;
+                return false;
             }
         }
         #endregion
