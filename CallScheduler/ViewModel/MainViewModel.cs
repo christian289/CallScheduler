@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace CallScheduler.ViewModel
@@ -492,9 +493,6 @@ namespace CallScheduler.ViewModel
 
         private void Edit()
         {
-            if (Model.Count > 0)
-            { }
-
             if (Mode.Equals(CRUDmode.Read))
             {
                 EditButtonName = "수정 완료";
@@ -503,6 +501,9 @@ namespace CallScheduler.ViewModel
             else
             {
                 EditButtonName = "알람 수정";
+
+                OlderAlarmCheck((DataModel)LvModel.SelectedItem);
+
                 Mode = CRUDmode.Read;
 
                 MessageBox.Show("수정 완료", "알람", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -511,7 +512,7 @@ namespace CallScheduler.ViewModel
 
         private bool CanExecute_Edit()
         {
-            if (Mode == CRUDmode.Running || LvModel.SelectedItem is null)
+            if (Mode == CRUDmode.Running || LvModel.SelectedItem is null || Model.Count <= 0)
             {
                 return false;
             }
@@ -822,6 +823,7 @@ namespace CallScheduler.ViewModel
                             .ContinueWith((returnValue) => {
                                 if (returnValue.Result)
                                 {
+                                    OlderAlarmCheck(obj);
                                     PpOpen = true;
                                 }
                             }
@@ -894,6 +896,11 @@ namespace CallScheduler.ViewModel
 
             SourceFilePath = Directory.GetCurrentDirectory() + @"\Data.xml";
             Model = new ObservableCollection<DataModel>(DataXML.XmlLoad(SourceFilePath));
+
+            foreach(DataModel obj in Model)
+            {
+                OlderAlarmCheck(obj);
+            }
         }
 
         private bool CanExecute_Loaded(object args)
@@ -976,7 +983,7 @@ namespace CallScheduler.ViewModel
             WindowsAPI.keybd_event(WindowsAPI.VK_ENTER, 0, WindowsAPI.KEYEVENTF_EXTENDEDKEY | WindowsAPI.KEYEVENTF_KEYUP, 0);
         }
 
-        public void SendText(IntPtr hEdit, string SendText)
+        private void SendText(IntPtr hEdit, string SendText)
         {
             WindowsAPI.SendMessage(hEdit, WindowsAPI.WM_SETTEXT, IntPtr.Zero, SendText);
             //WindowsAPI.PostMessage(hEdit, WindowsAPI.WM_KEYDOWN, WindowsAPI.VK_ENTER, IntPtr.Zero); // 이미지 전송과 함께 사용할 경우 동작하지 않음.
@@ -985,12 +992,22 @@ namespace CallScheduler.ViewModel
             WindowsAPI.keybd_event(WindowsAPI.VK_ENTER, 0, WindowsAPI.KEYEVENTF_EXTENDEDKEY | WindowsAPI.KEYEVENTF_KEYUP, 0);
         }
 
-        public BitmapSource BitmapToBitmapSource(Bitmap source)
+        private BitmapSource BitmapToBitmapSource(Bitmap source)
         {
             return Imaging.CreateBitmapSourceFromHBitmap(source.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
         }
 
-
+        private void OlderAlarmCheck(DataModel obj)
+        {
+            if (DateTime.Compare(obj.AlarmTime, DateTime.Now) < 0)
+            {
+                obj.ItemColor = System.Windows.Media.Brushes.Red;
+            }
+            else
+            {
+                obj.ItemColor = System.Windows.Media.Brushes.DarkSeaGreen;
+            }
+        }
         #endregion
     }
 }

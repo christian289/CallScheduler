@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace CallScheduler.Model
 {
@@ -68,5 +69,24 @@ namespace CallScheduler.Model
                 }
             }
         }
+
+
+
+        #region Item 색상
+        private Brush _ItemColor = Brushes.DarkSeaGreen;
+
+        public Brush ItemColor
+        {
+            get => _ItemColor;
+            set
+            {
+                if (_ItemColor != value)
+                {
+                    _ItemColor = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        #endregion
     }
 }
