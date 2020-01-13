@@ -165,7 +165,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="WPF메모.txt" />
+    <Resource Include="개발 메모.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Global\Interface\" />

@@ -263,8 +263,6 @@ namespace UC
         private static void HourPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             DateSpinControl obj = sender as DateSpinControl;
-            int NewHour = (int)e.NewValue;
-
             obj.Hour = (int)e.NewValue;
         }
 
@@ -524,11 +522,6 @@ namespace UC
         {
             DataContext = this;
             InitializeComponent();
-        }
-
-        private static DateTime ChangeTime(DateTime dateTime, int hours, int minutes, int seconds = default, int milliseconds = default)
-        {
-            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, hours, minutes, seconds, milliseconds, dateTime.Kind);
         }
     }
 }

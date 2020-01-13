@@ -184,8 +184,7 @@
                         Grid.ColumnSpan="2"
                         Margin="50,8,50,8"
                         Content="{Binding AlarmStateString}"
-                        Command="{Binding BtnAlarmStateCommand}"
-                        IsEnabled="{Binding BtnAlarmStateController}"/>
+                        Command="{Binding BtnAlarmStateCommand}"/>
             </Grid>
 
             <Grid x:Name="GrdAlarmList" 

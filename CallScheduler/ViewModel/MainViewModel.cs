@@ -24,20 +24,6 @@ namespace CallScheduler.ViewModel
     {
         #region Property
 
-        #region 버튼 컨트롤러
-        private bool _BtnAlarmStateController = false;
-
-        public bool BtnAlarmStateController
-        {
-            get => _BtnAlarmStateController;
-            set
-            {
-                _BtnAlarmStateController = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-
         #region 텍스트 박스 컨트롤러
         private bool _NameTextboxController = false;
 
@@ -114,21 +100,18 @@ namespace CallScheduler.ViewModel
                         PhoneNumberTextboxController = true;
                         AlarmTimeTextboxController = true;
                         MemoTextboxController = true;
-                        BtnAlarmStateController = false;
                         break;
                     case CRUDmode.Read:
                         NameTextboxController = false;
                         PhoneNumberTextboxController = false;
                         AlarmTimeTextboxController = false;
                         MemoTextboxController = false;
-                        BtnAlarmStateController = true;
                         break;
                     case CRUDmode.Update:
                         NameTextboxController = true;
                         PhoneNumberTextboxController = true;
                         AlarmTimeTextboxController = true;
                         MemoTextboxController = true;
-                        BtnAlarmStateController = false;
                         break;
                     case CRUDmode.Delete:
                         // 작업 없음.
@@ -423,6 +406,7 @@ namespace CallScheduler.ViewModel
         #region Field
 
         private CancellationTokenSource tokenSource;
+        private List<Task<bool>> LiAlarmList;
 
         #endregion
 
@@ -433,6 +417,7 @@ namespace CallScheduler.ViewModel
             // 생성자가 아닌 맴버변수에 해주는게 좋다.
 
             tokenSource = new CancellationTokenSource();
+            LiAlarmList = new List<Task<bool>>();
         }
 
         #region ICommand
@@ -520,9 +505,7 @@ namespace CallScheduler.ViewModel
             else
             {
                 EditButtonName = "알람 수정";
-
                 OlderAlarmCheck((DataModel)LvModel.SelectedItem);
-
                 Mode = CRUDmode.Read;
 
                 MessageBox.Show("수정 완료", "알람", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -746,16 +729,17 @@ namespace CallScheduler.ViewModel
 
         private void DateTimePickerPopupOpen()
         {
-            if (!PpDTPAlarmTime)
+            if (!PpDTPAlarmTime) // 팝업 열기
             {
                 PpDTPAlarmTime = true;
                 SelectedDate = ((DataModel)LvModel.SelectedItem).AlarmTime;
             }
-            else
+            else // 팝업 닫기
             {
                 PpTextShowing = true;
                 PpDTPAlarmTime = false;
                 ((DataModel)LvModel.SelectedItem).AlarmTime = SelectedDate;
+                OlderAlarmCheck((DataModel)LvModel.SelectedItem);
             }
         }
 
@@ -841,27 +825,41 @@ namespace CallScheduler.ViewModel
                         continue;
                     }
 
-                    Task.Factory.StartNew(() => 
-                        AlarmTaskStart(obj, tokenSource.Token), tokenSource.Token)
-                            .ContinueWith((returnValue) => {
-                                if (returnValue.Result)
-                                {
-                                    PpOpen = true;
-                                }
-                            }
-                        );
+                    Task<bool> task = new Task<bool>(() => AlarmTaskStart(obj, tokenSource.Token), tokenSource.Token);
+                    
+                    task.ContinueWith((returnValue) => {
+                        if (returnValue.Result)
+                        {
+                            LiAlarmList.Remove(task);
+                            //OlderAlarmCheck(obj);
+                            PpOpen = true;
+                        }
+
+                        if (LiAlarmList.Count == 0)
+                        {
+                            AlarmStateString = "알람시작";
+                            Mode = CRUDmode.Read;
+                        }
+                    });
+
+                    LiAlarmList.Add(task);
+                    task.Start();
                 }
+
+                Mode = CRUDmode.Running;
             }
             else
             {
                 AlarmStateString = "알람시작";
+                Mode = CRUDmode.Read;
                 tokenSource.Cancel();
+                LiAlarmList = new List<Task<bool>>();
             }
         }
 
         private bool CanExecute_BtnAlarmState()
         {
-            if (Mode == CRUDmode.Read && !(LvModel.SelectedItem is null))
+            if ((Mode == CRUDmode.Read && Model.Count > 0) || Mode == CRUDmode.Running)
             {
                 return true;
             }
@@ -883,6 +881,8 @@ namespace CallScheduler.ViewModel
                     PpAlarmPhoneNumber = pobj.PhoneNumber;
                     PpAlarmDateTime = pobj.AlarmTime;
                     PpAlarmMemo = pobj.Memo;
+
+                    OlderAlarmCheck(pobj);
 
                     return true;
                 }
@@ -945,7 +945,6 @@ namespace CallScheduler.ViewModel
         private void LvGuestListSelectionChanged(object args)
         {
             PpTextShowing = true;
-            BtnAlarmStateController = true;
         }
 
         private bool CanExecute_LvGuestListSelectionChanged(object args)
@@ -1021,7 +1020,9 @@ namespace CallScheduler.ViewModel
 
         private bool OlderAlarmCheck(DataModel obj)
         {
-            if (DateTime.Compare(obj.AlarmTime, DateTime.Now) < 0)
+            DateTime dtCurTime = DateTime.Now;
+
+            if ((dtCurTime - obj.AlarmTime).TotalSeconds >= 0)
             {
                 obj.ItemColor = System.Windows.Media.Brushes.Red;
                 return true;
