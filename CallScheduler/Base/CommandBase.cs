@@ -77,34 +77,6 @@ namespace CallScheduler.Base
     #endregion
 
     #region ICommand Memory Leak Solution Class
-    /// <summary>
-    /// 1. ICommand 동작 방식
-    /// XAML 에서 Command에 바인딩할 때 ICommand 객체를 바인딩할 경우,
-    /// ICommand 객체에서 ICommand 요소인 CanExecute를 실행시켜 버튼을 활성화 가능한지 정한다.
-    /// CanExecute는 프로그램 실행 시 최초 1회만 실행하여 버튼을 사용할 수 있는지 결정한다.
-    /// 이후 CanExecute를 통해 버튼을 사용가능한지 체크하려면, CanExecuteChanged 요소를 사용하여
-    /// 사용가능한지 알려야한다.
-    /// 버튼이 ICommand 객체를 최초 할당했을 때 CanExecuteChanged 이벤트를 구독한다.
-    /// 이후 버튼에서 아래 코드의 CanExecuteChanged.add를 호출하게 되고, 
-    /// 생성자를 통해 전달된 메소드는 CommandManager.RequerySuggested 이벤트에 전달된다.
-    /// 이후 버튼을 클릭할 때마다 RequerySuggested 이벤트를 발생시킨다.
-    /// 그러면 버튼은 CanExecuteChanged 알림을 받게 되고
-    /// CanExecute를 호출해 객체의 상태를 조회하게 된다.
-    /// 이후 Execute를 호출해서 Command를 실행한다.
-    /// 
-    /// ※ 검색하다보면 ICommand 객체를 CanExecute를 발생시키는 메소드를 만들어서 계속 메소드를 호출하게 하는데,
-    /// 그런 메소드를 만들지 않고 CommandManager.RequerySuggested 에 등록하면 Windows가 알아서 CanExecuteChanged를 호출해준다.
-    /// 
-    /// 2. ICommand 메모리 누수
-    /// View가 종료된 뒤 ViewModel의 ICommand 객체는 해제되지 않고 지속적으로 이미 종료된 View의 CanExecute를 호출하고 있다.
-    /// 이는 메모리 누수로 연결될 여지가 충분하다.
-    /// 따라서 View가 종료되는 시점에 이벤트를 걸어 DataContext = null; 코드로 하여금 View의 DataContext를 빼버리거나,
-    /// ICommand Memory Leak Solution Class 를 사용하여 처음부터 CanExecute가 지속적으로 호출되지 않도록
-    /// CommandManager.RequerySuggested 에 Command Method를 등록하지 않고,
-    /// 각 Command마다 생성된 _CanExecuteChangedHandler 를 참조하여 1개 밖에 등록되어 있지 없는 Command를 실행한다.
-    /// CommandManager.RequerySuggested 에 Command Method가 등록되지 않았기 때문에 Windows에서 CanExecute를 지속적으로 실행하지 않는다.
-    /// 따라서 메모리 누수도 발생하지 않는다.
-    /// </summary>
     public class CommandBase : ICommand
     {
         private List<WeakReference> _CanExecuteChangedHandler;

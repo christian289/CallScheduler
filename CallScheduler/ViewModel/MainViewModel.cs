@@ -505,7 +505,6 @@ namespace CallScheduler.ViewModel
             else
             {
                 EditButtonName = "알람 수정";
-                OlderAlarmCheck((DataModel)LvModel.SelectedItem);
                 Mode = CRUDmode.Read;
 
                 MessageBox.Show("수정 완료", "알람", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -831,7 +830,6 @@ namespace CallScheduler.ViewModel
                         if (returnValue.Result)
                         {
                             LiAlarmList.Remove(task);
-                            //OlderAlarmCheck(obj);
                             PpOpen = true;
                         }
 
@@ -882,7 +880,7 @@ namespace CallScheduler.ViewModel
                     PpAlarmDateTime = pobj.AlarmTime;
                     PpAlarmMemo = pobj.Memo;
 
-                    OlderAlarmCheck(pobj);
+                    pobj.ItemColor = System.Windows.Media.Brushes.Red;
 
                     return true;
                 }
