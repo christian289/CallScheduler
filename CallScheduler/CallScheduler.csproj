@@ -82,12 +82,19 @@
     <Compile Include="Global\VisibilityConverter.cs" />
     <Compile Include="Global\ContentDateTimeConverter.cs" />
     <Compile Include="Global\PopupDateTimeConverter.cs" />
+    <Compile Include="MainWindow2.xaml.cs">
+      <DependentUpon>MainWindow2.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UC\DateTimePickerControl.xaml.cs">
       <DependentUpon>DateTimePickerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UC\DateSpinControl.xaml.cs">
       <DependentUpon>DateSpinControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="MainWindow2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -105,6 +112,7 @@
     <Compile Include="Model\DataModel.cs" />
     <Compile Include="Model\ListViewModel.cs" />
     <Compile Include="Base\ModelBase.cs" />
+    <Compile Include="ViewModel\MainViewModel2.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

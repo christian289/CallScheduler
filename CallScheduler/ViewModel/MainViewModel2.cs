@@ -6,9 +6,11 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,59 +22,102 @@ using System.Windows.Media.Imaging;
 
 namespace CallScheduler.ViewModel
 {
-    public class MainViewModel : ModelBase
+    public class MainViewModel2 : ModelBase
     {
+        private Property _This = new Property();
+
+        public Property This
+        {
+            get => _This;
+            set
+            {
+                _This = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public struct Property
+        {
+            [NotifyParentProperty(true)]
+            public bool NameTextboxController { get; set; }
+            [NotifyParentProperty(true)]
+            public bool PhoneNumberTextboxController { get; set; }
+            [NotifyParentProperty(true)]
+            public bool AlarmTimeTextboxController { get; set; }
+            [NotifyParentProperty(true)]
+            public bool MemoTextboxController { get; set; }
+            [NotifyParentProperty(true)]
+            public string SourceFilePath { get; set; } // XML 데이터 파일 경로
+            [NotifyParentProperty(true)]
+            public string AddButtonName { get; set; } // 알람 추가 버튼명
+            [NotifyParentProperty(true)]
+            public string EditButtonName { get; set; } // 알람 수정 버튼명
+            [NotifyParentProperty(true)]
+            public ObservableCollection<DataModel> Model { get; set; } // 고객명단
+            [NotifyParentProperty(true)]
+            public BitmapSource LoadedImage { get; set; } // 불러온 이미지
+            [NotifyParentProperty(true)]
+            public string InputText { get; set; } // 입력한 텍스트
+            [NotifyParentProperty(true)]
+            public string TargetKeyword { get; set; } // 찾을 카카오톡 채팅방 이름 키워드
+            [NotifyParentProperty(true)]
+            public bool PpOpen { get; set; } // 알람 팝업 오픈
+            [NotifyParentProperty(true)]
+            public bool PpDTPAlarmTime { get; set; } // 날짜 선택 팝업 오픈
+            [NotifyParentProperty(true)]
+            public bool PpTextShowing { get; set; } // 날짜 선택 버튼 텍스트
+            [NotifyParentProperty(true)]
+            public DateTime SelectedDate { get; set; } // 선택 날짜
+            [NotifyParentProperty(true)]
+            public bool PpDetailInfoView { get; set; } // 알람 상세 팝업
+            [NotifyParentProperty(true)]
+            public string PpAlarmName { get; set; } // 알람 정보
+            [NotifyParentProperty(true)]
+            public string PpAlarmPhoneNumber { get; set; } // 알람 정보
+            [NotifyParentProperty(true)]
+            public DateTime PpAlarmDateTime { get; set; } // 알람 정보
+            [NotifyParentProperty(true)]
+            public string PpAlarmMemo { get; set; } // 알람 정보
+            [NotifyParentProperty(true)]
+            public string AlarmStateString { get; set; } // 알람 시작버튼 문구변경
+            [NotifyParentProperty(true)]
+            public bool LvGuestListEnable { get; set; } // 고객 명단 사용가능 여부
+        }
+
+        public void SetProperty(Property _property, string propertyName, object setterValue)
+        {
+            FieldInfo fi = typeof(Property).GetField(propertyName, BindingFlags.Instance | BindingFlags.NonPublic);
+            TypedReference tr = __makeref(_property);
+            fi.SetValueDirect(tr, setterValue);
+        }
+
+        public void Init()
+        {
+            SetProperty(This, nameof(Property.NameTextboxController), false);
+            SetProperty(This, nameof(Property.PhoneNumberTextboxController), false);
+            SetProperty(This, nameof(Property.AlarmTimeTextboxController), false);
+            SetProperty(This, nameof(Property.MemoTextboxController), false);
+            SetProperty(This, nameof(Property.SourceFilePath), string.Empty);
+            SetProperty(This, nameof(Property.AddButtonName), "알람 추가");
+            SetProperty(This, nameof(Property.EditButtonName), "알람 수정");
+            SetProperty(This, nameof(Property.Model), new ObservableCollection<DataModel>());
+            SetProperty(This, nameof(Property.LoadedImage), null);
+            SetProperty(This, nameof(Property.InputText), string.Empty);
+            SetProperty(This, nameof(Property.TargetKeyword), string.Empty);
+            SetProperty(This, nameof(Property.PpOpen), false);
+            SetProperty(This, nameof(Property.PpDTPAlarmTime), false);
+            SetProperty(This, nameof(Property.PpTextShowing), false);
+            SetProperty(This, nameof(Property.SelectedDate), null);
+            SetProperty(This, nameof(Property.PpDetailInfoView), false);
+            SetProperty(This, nameof(Property.PpAlarmName), string.Empty);
+            SetProperty(This, nameof(Property.PpAlarmPhoneNumber), string.Empty);
+            SetProperty(This, nameof(Property.PpAlarmDateTime), new DateTime());
+            SetProperty(This, nameof(Property.PpAlarmMemo), string.Empty);
+            SetProperty(This, nameof(Property.AlarmStateString), "알람시작");
+            SetProperty(This, nameof(Property.LvGuestListEnable), true);
+        }
+
         #region Property
-
-        #region 텍스트 박스 컨트롤러
-        private bool _NameTextboxController = false;
-
-        public bool NameTextboxController
-        {
-            get => _NameTextboxController;
-            set
-            {
-                _NameTextboxController = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool _PhoneNumberTextboxController = false;
-
-        public bool PhoneNumberTextboxController
-        {
-            get => _PhoneNumberTextboxController;
-            set
-            {
-                _PhoneNumberTextboxController = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool _AlarmTimeTextboxController = false;
-
-        public bool AlarmTimeTextboxController
-        {
-            get => _AlarmTimeTextboxController;
-            set
-            {
-                _AlarmTimeTextboxController = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool _MemoTextboxController = false;
-
-        public bool MemoTextboxController
-        {
-            get => _MemoTextboxController;
-            set
-            {
-                _MemoTextboxController = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
 
         #region 수정 모드 Flag
         public enum CRUDmode
@@ -96,22 +141,22 @@ namespace CallScheduler.ViewModel
                 switch (_Mode)
                 {
                     case CRUDmode.Create:
-                        NameTextboxController = true;
-                        PhoneNumberTextboxController = true;
-                        AlarmTimeTextboxController = true;
-                        MemoTextboxController = true;
+                        SetProperty(This, nameof(Property.NameTextboxController), true);
+                        SetProperty(This, nameof(Property.PhoneNumberTextboxController), true);
+                        SetProperty(This, nameof(Property.AlarmTimeTextboxController), true);
+                        SetProperty(This, nameof(Property.MemoTextboxController), true);
                         break;
                     case CRUDmode.Read:
-                        NameTextboxController = false;
-                        PhoneNumberTextboxController = false;
-                        AlarmTimeTextboxController = false;
-                        MemoTextboxController = false;
+                        SetProperty(This, nameof(Property.NameTextboxController), false);
+                        SetProperty(This, nameof(Property.PhoneNumberTextboxController), false);
+                        SetProperty(This, nameof(Property.AlarmTimeTextboxController), false);
+                        SetProperty(This, nameof(Property.MemoTextboxController), false);
                         break;
                     case CRUDmode.Update:
-                        NameTextboxController = true;
-                        PhoneNumberTextboxController = true;
-                        AlarmTimeTextboxController = true;
-                        MemoTextboxController = true;
+                        SetProperty(This, nameof(Property.NameTextboxController), true);
+                        SetProperty(This, nameof(Property.PhoneNumberTextboxController), true);
+                        SetProperty(This, nameof(Property.AlarmTimeTextboxController), true);
+                        SetProperty(This, nameof(Property.MemoTextboxController), true);
                         break;
                     case CRUDmode.Delete:
                         // 작업 없음.
@@ -126,280 +171,10 @@ namespace CallScheduler.ViewModel
         }
         #endregion
 
-        #region XML 데이터 파일 경로
-        private string _SourceFilePath = string.Empty;
-
-        public string SourceFilePath
-        {
-            get => _SourceFilePath;
-            set
-            {
-                _SourceFilePath = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-
-        #region 알람 추가 버튼명
-        private string _AddButtonName = "알람 추가";
-
-        public string AddButtonName
-        {
-            get => _AddButtonName;
-            set
-            {
-                _AddButtonName = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-
-        #region 알람 수정 버튼명
-        private string _EditButtonName = "알람 수정";
-
-        public string EditButtonName
-        {
-            get => _EditButtonName;
-            set
-            {
-                _EditButtonName = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-
-        #region 고객명단
-        private ObservableCollection<DataModel> _Model = new ObservableCollection<DataModel>();
-
-        public ObservableCollection<DataModel> Model
-        {
-            get => _Model;
-            set
-            {
-                _Model = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-
-        #region 불러온 이미지
-        private BitmapSource _LoadedImage;
-
-        public BitmapSource LoadedImage
-        {
-            get => _LoadedImage;
-            set
-            {
-                _LoadedImage = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-
-        #region 입력한 텍스트
-        private string _InputText = string.Empty;
-
-        public string InputText
-        {
-            get => _InputText;
-            set
-            {
-                _InputText = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-
-        #region 찾을 카카오톡 채팅방 이름 키워드
-        private string _TargetKeyword = string.Empty;
-
-        public string TargetKeyword
-        {
-            get => _TargetKeyword;
-            set
-            {
-                _TargetKeyword = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-
-        #region 팝업 오픈 플래그
-
-        #region 알람 오픈
-        private bool _PpOpen = false;
-
-        public bool PpOpen
-        {
-            get => _PpOpen;
-            set
-            {
-                _PpOpen = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-
-        #region 날짜 선택
-        private bool _PpDTPAlarmTime = false;
-
-        public bool PpDTPAlarmTime
-        {
-            get => _PpDTPAlarmTime;
-            set
-            {
-                _PpDTPAlarmTime = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool _PpTextShowing = false;
-
-        public bool PpTextShowing
-        {
-            get => _PpTextShowing;
-            set
-            {
-                if (_PpTextShowing != value)
-                {
-                    _PpTextShowing = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private DateTime _SelectedDate;
-
-        public DateTime SelectedDate
-        {
-            get => _SelectedDate;
-            set
-            {
-                if (_SelectedDate != value)
-                {
-                    _SelectedDate = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-        #endregion
-
-        #region 알람 상세 팝업
-        private bool _PpDetailInfoView = false;
-
-        public bool PpDetailInfoView
-        {
-            get => _PpDetailInfoView;
-            set
-            {
-                _PpDetailInfoView = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-
-        #endregion
-
-        #region 알람 발생 시 팝업 프로퍼티
-        private string _PpAlarmName = string.Empty;
-
-        public string PpAlarmName
-        {
-            get => _PpAlarmName;
-            set
-            {
-                if (_PpAlarmName != value)
-                {
-                    _PpAlarmName = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private string _PpAlarmPhoneNumber = string.Empty;
-
-        public string PpAlarmPhoneNumber
-        {
-            get => _PpAlarmPhoneNumber;
-            set
-            {
-                if (_PpAlarmPhoneNumber != value)
-                {
-                    _PpAlarmPhoneNumber = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private DateTime _PpAlarmDateTime = new DateTime();
-
-        public DateTime PpAlarmDateTime
-        {
-            get => _PpAlarmDateTime;
-            set
-            {
-                if (_PpAlarmDateTime != value)
-                {
-                    _PpAlarmDateTime = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private string _PpAlarmMemo = string.Empty;
-
-        public string PpAlarmMemo
-        {
-            get => _PpAlarmMemo;
-            set
-            {
-                if (_PpAlarmMemo != value)
-                {
-                    _PpAlarmMemo = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-        #endregion
-
         /// <summary>
         /// 고객명단 보조
         /// </summary>
         public ListViewModel LvModel { get; set; } = new ListViewModel();
-
-        #region 알람 시작버튼 문구변경
-        private string _AlarmStateString = "알람시작";
-
-        public string AlarmStateString
-        {
-            get => _AlarmStateString;
-            set
-            {
-                if (_AlarmStateString != value)
-                {
-                    _AlarmStateString = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-        #endregion
-
-        #region 고객 명단 사용가능 여부
-        private bool _LvGuestListEnable = true;
-
-        public bool LvGuestListEnable
-        {
-            get => _LvGuestListEnable;
-            set
-            {
-                if (_LvGuestListEnable != value)
-                {
-                    _LvGuestListEnable = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-        #endregion
 
         #endregion
 
@@ -410,7 +185,7 @@ namespace CallScheduler.ViewModel
 
         #endregion
 
-        public MainViewModel()
+        public MainViewModel2()
         {
             // WPF에서 MVVM Pattern을 사용하면
             // 프로그램 시작 시 XAML에서 Binding Property를 사용하기 때문에 초기화를
@@ -418,8 +193,6 @@ namespace CallScheduler.ViewModel
 
             tokenSource = new CancellationTokenSource();
             LiAlarmList = new List<Task<bool>>();
-
-            Loaded();
         }
 
         #region ICommand
@@ -445,24 +218,24 @@ namespace CallScheduler.ViewModel
         {
             if (Mode.Equals(CRUDmode.Read))
             {
-                AddButtonName = "추가 완료";
+                SetProperty(This, nameof(Property.AddButtonName), "추가 완료");
                 Mode = CRUDmode.Create;
 
                 DataModel obj = new DataModel
                 {
                     AlarmTime = DateTime.Now
                 };
-                Model.Add(obj);
+                This.Model.Add(obj);
                 LvModel.SelectedItem = obj;
-                LvModel.SelectedIndexNumber = Model.IndexOf(obj) + 1;
-                PpTextShowing = false;
-                LvGuestListEnable = false;
+                LvModel.SelectedIndexNumber = This.Model.IndexOf(obj) + 1;
+                SetProperty(This, nameof(Property.PpTextShowing), false);
+                SetProperty(This, nameof(Property.LvGuestListEnable), false);
             }
             else
             {
-                AddButtonName = "알람 추가";
+                SetProperty(This, nameof(Property.AddButtonName), "알람 추가");
                 Mode = CRUDmode.Read;
-                LvGuestListEnable = true;
+                SetProperty(This, nameof(Property.LvGuestListEnable), true);
 
                 MessageBox.Show("추가 완료", "알람", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -501,12 +274,12 @@ namespace CallScheduler.ViewModel
         {
             if (Mode.Equals(CRUDmode.Read))
             {
-                EditButtonName = "수정 완료";
+                SetProperty(This, nameof(Property.EditButtonName), "수정 완료");
                 Mode = CRUDmode.Update;
             }
             else
             {
-                EditButtonName = "알람 수정";
+                SetProperty(This, nameof(Property.EditButtonName), "알람 수정");
                 Mode = CRUDmode.Read;
 
                 MessageBox.Show("수정 완료", "알람", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -515,7 +288,7 @@ namespace CallScheduler.ViewModel
 
         private bool CanExecute_Edit()
         {
-            if (Mode == CRUDmode.Running || Mode == CRUDmode.Create || LvModel.SelectedItem is null || Model.Count <= 0)
+            if (Mode == CRUDmode.Running || Mode == CRUDmode.Create || LvModel.SelectedItem is null || This.Model.Count <= 0)
             {
                 return false;
             }
@@ -547,7 +320,7 @@ namespace CallScheduler.ViewModel
             // 정말 삭제하겠는지 묻는 메세지 박스
             if (!(LvModel.SelectedItem is null))
             {
-                Model.Remove(LvModel.SelectedItem as DataModel);
+                This.Model.Remove(LvModel.SelectedItem as DataModel);
             }
         }
 
@@ -574,13 +347,13 @@ namespace CallScheduler.ViewModel
                 //return _SaveCommand ?? (_SaveCommand = new CommandBase(Save));
 
                 return _SaveCommand ?? (_SaveCommand = new CommandBase<string>(
-                    param => Save(SourceFilePath), param => CanExecute_Save(), false));
+                    param => Save(This.SourceFilePath), param => CanExecute_Save(), false));
             }
         }
 
         private void Save(string FilePath)
         {
-            if (DataXML.XmlSave(new List<DataModel>(Model), FilePath))
+            if (DataXML.XmlSave(new List<DataModel>(This.Model), FilePath))
             {
                 MessageBox.Show("저장 완료", "알람", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -626,7 +399,7 @@ namespace CallScheduler.ViewModel
             if (DlgImageFile.ShowDialog() == true) 
             {
                 Bitmap _Image = Image.FromFile(DlgImageFile.FileName, true) as Bitmap;
-                LoadedImage = BitmapToBitmapSource(_Image);
+                SetProperty(This, nameof(Property.LoadedImage), BitmapToBitmapSource(_Image));
             }
 
             // WPF에서는 OpenFileDialog가 System.WinMouws.Forms 네임스페이스가 아닌,
@@ -655,12 +428,12 @@ namespace CallScheduler.ViewModel
         {
             if (WindowInfo.GetWindowHandleInfo())
             {
-                WindowInfo.FindTargetHandle(TargetKeyword);
+                WindowInfo.FindTargetHandle(This.TargetKeyword);
                 string strMsg = string.Format("메세지를 전송할 화면이 {0}개 입니다. 전송하시겠습니까?", WindowInfo.TargetHandle.Count);
 
                 if (MessageBox.Show(strMsg, "알람", MessageBoxButton.OKCancel, MessageBoxImage.Question).Equals(MessageBoxResult.OK))
                 {
-                    Clipboard.SetImage(LoadedImage); // 클립보드에 이미지 복사
+                    Clipboard.SetImage(This.LoadedImage); // 클립보드에 이미지 복사
 
                     try
                     {
@@ -668,7 +441,7 @@ namespace CallScheduler.ViewModel
                         {
                             IntPtr ChildHandle = IsKaKaoTalkOpen(item.Value);
                             ImgClipBoardPaste(ChildHandle);
-                            SendText(ChildHandle, InputText);
+                            SendText(ChildHandle, This.InputText);
                         }
                     }
                     catch
@@ -704,11 +477,11 @@ namespace CallScheduler.ViewModel
 
         private void PopupClose()
         {
-            PpAlarmName = string.Empty;
-            PpAlarmDateTime = new DateTime();
-            PpAlarmPhoneNumber = string.Empty;
-            PpAlarmMemo = string.Empty;
-            PpOpen = false;
+            SetProperty(This, nameof(Property.PpAlarmName), string.Empty);
+            SetProperty(This, nameof(Property.PpAlarmDateTime), new DateTime());
+            SetProperty(This, nameof(Property.PpAlarmPhoneNumber), string.Empty);
+            SetProperty(This, nameof(Property.PpAlarmMemo), string.Empty);
+            SetProperty(This, nameof(Property.PpOpen), false);
         }
 
         private bool CanExecute_PopupClose()
@@ -730,16 +503,16 @@ namespace CallScheduler.ViewModel
 
         private void DateTimePickerPopupOpen()
         {
-            if (!PpDTPAlarmTime) // 팝업 열기
+            if (!This.PpDTPAlarmTime) // 팝업 열기
             {
-                PpDTPAlarmTime = true;
-                SelectedDate = ((DataModel)LvModel.SelectedItem).AlarmTime;
+                SetProperty(This, nameof(Property.PpDTPAlarmTime), true);
+                SetProperty(This, nameof(Property.SelectedDate), ((DataModel)LvModel.SelectedItem).AlarmTime);
             }
             else // 팝업 닫기
             {
-                PpTextShowing = true;
-                PpDTPAlarmTime = false;
-                ((DataModel)LvModel.SelectedItem).AlarmTime = SelectedDate;
+                SetProperty(This, nameof(Property.PpTextShowing), true);
+                SetProperty(This, nameof(Property.PpDTPAlarmTime), false);
+                ((DataModel)LvModel.SelectedItem).AlarmTime = This.SelectedDate;
                 OlderAlarmCheck((DataModel)LvModel.SelectedItem);
             }
         }
@@ -763,13 +536,13 @@ namespace CallScheduler.ViewModel
 
         private void DetailInfoViewOpen()
         {
-            if (!PpDetailInfoView)
+            if (!This.PpDetailInfoView)
             {
-                PpDetailInfoView = true;
+                SetProperty(This, nameof(Property.PpDetailInfoView), true);
             }
             else
             {
-                PpDetailInfoView = false;
+                SetProperty(This, nameof(Property.PpDetailInfoView), false);
             }
         }
 
@@ -792,7 +565,7 @@ namespace CallScheduler.ViewModel
 
         private void DetailInfoViewClose()
         {
-            PpDetailInfoView = false;
+            SetProperty(This, nameof(Property.PpDetailInfoView), false);
         }
 
         private bool CanExecute_DetailInfoViewClose()
@@ -816,10 +589,10 @@ namespace CallScheduler.ViewModel
         {
             if (Mode == CRUDmode.Read)
             {
-                AlarmStateString = "알람중지";
+                SetProperty(This, nameof(Property.AlarmStateString), "알람중지");
                 tokenSource = new CancellationTokenSource();
 
-                foreach (DataModel obj in Model)
+                foreach (DataModel obj in This.Model)
                 {
                     if (OlderAlarmCheck(obj))
                     {
@@ -832,12 +605,12 @@ namespace CallScheduler.ViewModel
                         if (returnValue.Result)
                         {
                             LiAlarmList.Remove(task);
-                            PpOpen = true;
+                            SetProperty(This, nameof(Property.PpOpen), true);
                         }
 
                         if (LiAlarmList.Count == 0)
                         {
-                            AlarmStateString = "알람시작";
+                            SetProperty(This, nameof(Property.AlarmStateString), "알람시작");
                             Mode = CRUDmode.Read;
                         }
                     });
@@ -850,7 +623,7 @@ namespace CallScheduler.ViewModel
             }
             else
             {
-                AlarmStateString = "알람시작";
+                SetProperty(This, nameof(Property.AlarmStateString), "알람시작");
                 Mode = CRUDmode.Read;
                 tokenSource.Cancel();
                 LiAlarmList = new List<Task<bool>>();
@@ -859,7 +632,7 @@ namespace CallScheduler.ViewModel
 
         private bool CanExecute_BtnAlarmState()
         {
-            if ((Mode == CRUDmode.Read && Model.Count > 0) || Mode == CRUDmode.Running)
+            if ((Mode == CRUDmode.Read && This.Model.Count > 0) || Mode == CRUDmode.Running)
             {
                 return true;
             }
@@ -877,10 +650,10 @@ namespace CallScheduler.ViewModel
                 // 따라서 아래와 같이 처리하거나, DateTime을 String으로 바꿔서 비교하거나, DateTime의 시간 관련 프로퍼티를 하나씩 비교해야한다.
                 if (Math.Abs((DateTime.Now - pobj.AlarmTime).TotalSeconds) < 1)
                 {
-                    PpAlarmName = pobj.Name;
-                    PpAlarmPhoneNumber = pobj.PhoneNumber;
-                    PpAlarmDateTime = pobj.AlarmTime;
-                    PpAlarmMemo = pobj.Memo;
+                    SetProperty(This, nameof(Property.PpAlarmName), pobj.Name);
+                    SetProperty(This, nameof(Property.PpAlarmPhoneNumber), pobj.PhoneNumber);
+                    SetProperty(This, nameof(Property.PpAlarmDateTime), pobj.AlarmTime);
+                    SetProperty(This, nameof(Property.PpAlarmMemo), pobj.Memo);
 
                     pobj.ItemColor = System.Windows.Media.Brushes.Red;
 
@@ -901,6 +674,35 @@ namespace CallScheduler.ViewModel
 
         #region Trigger
 
+        #region MainView Loaded
+        private ICommand _LoadedCommand;
+
+        public ICommand LoadedCommand
+        {
+            get
+            {
+                return _LoadedCommand ?? (_LoadedCommand = new CommandBase<object>(Loaded, CanExecute_Loaded, true));
+            }
+        }
+
+        private void Loaded(object args)
+        {
+            SetProperty(This, nameof(Property.SelectedDate), DateTime.Now);
+            SetProperty(This, nameof(Property.SourceFilePath), Directory.GetCurrentDirectory() + @"\Data.xml");
+            SetProperty(This, nameof(Property.Model), new ObservableCollection<DataModel>(DataXML.XmlLoad(This.SourceFilePath)));
+
+            foreach(DataModel obj in This.Model)
+            {
+                OlderAlarmCheck(obj);
+            }
+        }
+
+        private bool CanExecute_Loaded(object args)
+        {
+            return true;
+        }
+        #endregion
+
         #region LvGuestList SelectionChanged
         private ICommand _LvGuestListSelectionChangedCommand;
 
@@ -914,12 +716,12 @@ namespace CallScheduler.ViewModel
 
         private void LvGuestListSelectionChanged(object args)
         {
-            PpTextShowing = true;
+            SetProperty(This, nameof(Property.PpTextShowing), true);
         }
 
         private bool CanExecute_LvGuestListSelectionChanged(object args)
         {
-            if (Model.Count <= 0)
+            if (This.Model.Count <= 0)
             {
                 return false;
             }
@@ -933,19 +735,6 @@ namespace CallScheduler.ViewModel
         #endregion
 
         #region 기능 함수
-        public void Loaded()
-        {
-            SelectedDate = DateTime.Now;
-
-            SourceFilePath = $@"{AppDomain.CurrentDomain.BaseDirectory}\Data.xml";
-            Model = new ObservableCollection<DataModel>(DataXML.XmlLoad(SourceFilePath));
-
-            foreach (DataModel obj in Model)
-            {
-                OlderAlarmCheck(obj);
-            }
-        }
-
         /// <summary>
         /// PC 카카오톡 창 핸들 찾기
         /// </summary>
