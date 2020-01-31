@@ -114,7 +114,7 @@
     <Compile Include="Model\ListViewModel.cs" />
     <Compile Include="Base\ModelBase.cs" />
     <Compile Include="ViewModel\MainViewModel2.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\MainViewModel_Property.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
