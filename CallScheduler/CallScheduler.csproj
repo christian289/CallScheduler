@@ -91,6 +91,7 @@
     <Compile Include="UC\DateSpinControl.xaml.cs">
       <DependentUpon>DateSpinControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\MainViewModel_Command.cs" />
     <Page Include="MainWindow2.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
