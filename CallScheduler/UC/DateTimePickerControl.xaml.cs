@@ -29,6 +29,8 @@ namespace UC
     /// - static Method에서 this 키워드 사용 불가(가능 했다면 this.GetType()으로 해도 되었을 듯.)
     /// - 위 방식이 불가하기 때문에 타입을 직접 넘겨야 함. PropertyFromName에 등록할 때 Type명을 DependencyProperty의 key값으로 사용. (해당 타입에 대한 특정한 속성은 유일해야 하기 때문)
     /// - 컨트롤 하나에 동일한 속성이 중복될 수 없는 이유가 위와 같을 것이다.
+    /// 
+    /// 3. DependencyProperty를 바인딩하기 위해서는, xaml에서 ElementName을 반드시 지정하여, Path로 바인딩 경로를 지정해야 한다.
     /// </summary>
     public partial class DateTimePickerControl : UserControl
     {
