@@ -79,6 +79,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Global\DateTimeConverter.cs" />
+    <Compile Include="Global\TextToGeometryConverter.cs" />
     <Compile Include="Global\VisibilityConverter.cs" />
     <Compile Include="Global\ContentDateTimeConverter.cs" />
     <Compile Include="Global\PopupDateTimeConverter.cs" />

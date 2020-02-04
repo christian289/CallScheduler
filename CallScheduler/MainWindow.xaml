@@ -15,6 +15,7 @@
         <cnvt:ContentDateTimeConverter x:Key="ContentDateTimeConverter"/>
         <cnvt:DateTimeConverter x:Key="DateTimeConverter"/>
         <cnvt:VisibilityConverter x:Key="VisibilityConverter"/>
+        <cnvt:TextToGeometryConverter x:Key="TextToGeometryConverter"/>
     </Window.Resources>
 
     <Grid x:Name="GrdMain">
@@ -366,14 +367,11 @@
                        LastChildFill="True">
                 <Border BorderThickness="1" 
                         BorderBrush="WhiteSmoke">
-                    <Label x:Name="LblSearchChatRoomKeyword" 
-                           DockPanel.Dock="Left"
-                           VerticalAlignment="Stretch"
-                           HorizontalAlignment="Stretch" 
-                           VerticalContentAlignment="Center"
-                           HorizontalContentAlignment="Center" 
-                           Content="&lt;검색 키워드&gt;" 
-                           FontSize="30"/>
+                    <Path x:Name="PathSearchChatRoomKeyword"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Data="{Binding Converter={StaticResource TextToGeometryConverter}, ConverterParameter=&lt;검색 키워드&gt;}"
+                          Stroke="Black"/>
                 </Border>
                 <TextBox x:Name="TxtSearchChatRoomKeyword" 
                          BorderThickness="1" 
