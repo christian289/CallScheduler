@@ -253,7 +253,7 @@ namespace CallScheduler.ViewModel
             if (WindowInfo.GetWindowHandleInfo())
             {
                 WindowInfo.FindTargetHandle(TargetKeyword);
-                string strMsg = string.Format("메세지를 전송할 화면이 {0}개 입니다. 전송하시겠습니까?", WindowInfo.TargetHandle.Count);
+                string strMsg = $"메세지를 전송할 화면이 {WindowInfo.TargetHandle.Count}개 입니다. 전송하시겠습니까?";
 
                 if (MessageBox.Show(strMsg, "알람", MessageBoxButton.OKCancel, MessageBoxImage.Question).Equals(MessageBoxResult.OK))
                 {

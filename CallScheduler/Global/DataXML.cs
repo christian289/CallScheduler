@@ -68,7 +68,7 @@ namespace CallScheduler.Global
             {
                 xml.Load(DataFilePath);
 
-                XmlNodeList nodes = xml.SelectNodes(string.Format("/{0}/{1}", NodeName.Alarm.ToString(), NodeName.Customer.ToString()));
+                XmlNodeList nodes = xml.SelectNodes($"/{NodeName.Alarm.ToString()}/{NodeName.Customer.ToString()}");
 
                 foreach (XmlNode node in nodes)
                 {
