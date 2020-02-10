@@ -1,6 +1,6 @@
 ﻿using CallScheduler.Base;
 using CallScheduler.Global;
-using CallScheduler.Model;
+using CallScheduler.Models;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace CallScheduler.ViewModel
+namespace CallScheduler.ViewModels
 {
     public partial class MainViewModel
     {

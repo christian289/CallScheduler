@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CallScheduler.Model
+namespace CallScheduler.Models
 {
     public class ListViewModel : ModelBase
     {

@@ -1,7 +1,7 @@
-﻿using CallScheduler.ViewModel;
+﻿using CallScheduler.ViewModels;
 using System.Windows;
 
-namespace CallScheduler
+namespace CallScheduler.Views
 {
     public partial class MainWindow : Window
     {

@@ -1,7 +1,7 @@
 ﻿using CallScheduler.Base;
 using CallScheduler.Global;
 using CallScheduler.Helper;
-using CallScheduler.Model;
+using CallScheduler.Models;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;

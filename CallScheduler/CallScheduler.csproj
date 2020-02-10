@@ -83,7 +83,7 @@
     <Compile Include="Global\VisibilityConverter.cs" />
     <Compile Include="Global\ContentDateTimeConverter.cs" />
     <Compile Include="Global\PopupDateTimeConverter.cs" />
-    <Compile Include="MainWindow2.xaml.cs">
+    <Compile Include="Views\MainWindow2.xaml.cs">
       <DependentUpon>MainWindow2.xaml</DependentUpon>
     </Compile>
     <Compile Include="UC\DateTimePickerControl.xaml.cs">
@@ -92,12 +92,12 @@
     <Compile Include="UC\DateSpinControl.xaml.cs">
       <DependentUpon>DateSpinControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModel\MainViewModel_Command.cs" />
-    <Page Include="MainWindow2.xaml">
+    <Compile Include="ViewModels\MainViewModel_Command.cs" />
+    <Page Include="Views\MainWindow2.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -111,12 +111,12 @@
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Helper\WindowsAPI.cs" />
     <Compile Include="Base\CommandBase.cs" />
-    <Compile Include="Model\DataModel.cs" />
-    <Compile Include="Model\ListViewModel.cs" />
+    <Compile Include="Models\DataModel.cs" />
+    <Compile Include="Models\ListViewModel.cs" />
     <Compile Include="Base\ModelBase.cs" />
-    <Compile Include="ViewModel\MainViewModel2.cs" />
-    <Compile Include="ViewModel\MainViewModel_Property.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="ViewModels\MainViewModel2.cs" />
+    <Compile Include="ViewModels\MainViewModel_Property.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -130,7 +130,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\TestModel.cs" />
+    <Compile Include="Models\TestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -1,7 +1,7 @@
 ﻿using CallScheduler.Base;
 using CallScheduler.Global;
 using CallScheduler.Helper;
-using CallScheduler.Model;
+using CallScheduler.Models;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace CallScheduler.ViewModel
+namespace CallScheduler.ViewModels
 {
     public partial class MainViewModel : ModelBase
     {

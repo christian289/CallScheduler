@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace CallScheduler.Model
+namespace CallScheduler.Models
 {
     public class DataModel : ModelBase
     {

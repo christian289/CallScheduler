@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace CallScheduler.Model
+namespace CallScheduler.Models
 {
     /// <summary>
     /// CommandBase<T> 테스트 모델 객체
