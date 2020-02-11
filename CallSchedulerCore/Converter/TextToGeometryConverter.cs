@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace CallSchedulerCore.Global
+namespace CallSchedulerCore.Converter
 {
     [ValueConversion(typeof(Point[]), typeof(Geometry))]
     public class TextToGeometryConverter : IValueConverter

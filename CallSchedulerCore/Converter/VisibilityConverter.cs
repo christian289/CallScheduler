@@ -1,21 +1,26 @@
 ﻿using System;
-using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 
-namespace CallSchedulerCore.Global
+namespace CallSchedulerCore.Converter
 {
-    public class DateTimeConverter : IValueConverter
+    public class VisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            DateTime target = (DateTime)value;
-
-            return target.ToString("yyyy/MM/dd h:mm tt", CultureInfo.CreateSpecificCulture("en-US"));
+            if ((bool)value)
+            {
+                return Visibility.Visible;
+            }
+            else
+            {
+                return Visibility.Collapsed;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            throw new NotSupportedException();
+            return Binding.DoNothing;
         }
     }
 }

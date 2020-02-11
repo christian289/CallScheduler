@@ -1,26 +1,20 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Data;
 
-namespace CallSchedulerCore.Global
+namespace CallSchedulerCore.Converter
 {
-    public class VisibilityConverter : IValueConverter
+    public class PopupDateTimeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if ((bool)value)
-            {
-                return Visibility.Visible;
-            }
-            else
-            {
-                return Visibility.Collapsed;
-            }
+            DateTime target = (DateTime)value;
+
+            return target.ToString("yyyy년MM월dd일\r\nHH시mm분");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            return Binding.DoNothing;
+            throw new NotSupportedException();
         }
     }
 }

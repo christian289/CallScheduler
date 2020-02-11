@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Data;
 
-namespace CallSchedulerCore.Global
+namespace CallSchedulerCore.Converter
 {
     public class ContentDateTimeConverter : IValueConverter
     {
