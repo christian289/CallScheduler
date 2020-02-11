@@ -1,0 +1,111 @@
+﻿<UserControl x:Class="UC.DateSpinControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UC"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="300"
+             Name="DSCMain">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="25" MaxWidth="25"/>
+            <ColumnDefinition Width="25" MaxWidth="100"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="25" MaxWidth="25"/>
+            <ColumnDefinition Width="25" MaxWidth="100"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15" MaxHeight="15"/>
+            <RowDefinition Height="15" MaxHeight="15"/>
+        </Grid.RowDefinitions>
+
+        <TextBox x:Name="TbHour" 
+                 Grid.Column="0" 
+                 Grid.Row="0" 
+                 Grid.RowSpan="2" 
+                 TextAlignment="Right"
+                 VerticalContentAlignment="Center" 
+                 HorizontalContentAlignment="Center" 
+                 FontSize="{Binding Path=FontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Text="{Binding Path=Hour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Rectangle Grid.Column="1" 
+                   Grid.Row="0" 
+                   Grid.RowSpan="2" 
+                   Fill="White"/>
+        <TextBlock x:Name="TbHourCaption" 
+                   Grid.Column="1" 
+                   Grid.Row="0" 
+                   Grid.RowSpan="2" 
+                   Text="시" 
+                   VerticalAlignment="Center" 
+                   TextAlignment="Center"
+                   FontSize="{Binding Path=FontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button x:Name="BtnHourUp" 
+                Grid.Column="2" 
+                Grid.Row="0" 
+                Command="{Binding HourUpCommand}">
+            <Polygon Width="25" 
+                     Height="15"
+                     Fill="Red" 
+                     Stroke="Red" 
+                     StrokeThickness="1" 
+                     Points="{Binding HourUpPoint}"/>
+        </Button>
+        <Button x:Name="BtnHourDown" 
+                Grid.Column="2" 
+                Grid.Row="1" 
+                Command="{Binding HourDownCommand}">
+            <Polygon Width="25" 
+                     Height="15"
+                     Fill="Red" 
+                     Stroke="Red" 
+                     StrokeThickness="1" 
+                     Points="{Binding HourDownPoint}"/>
+        </Button>
+        <TextBox x:Name="TbMinute" 
+                 Grid.Column="3" 
+                 Grid.Row="0" 
+                 Grid.RowSpan="2" 
+                 TextAlignment="Right" 
+                 VerticalContentAlignment="Center" 
+                 HorizontalContentAlignment="Center" 
+                 FontSize="{Binding Path=FontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Text="{Binding Path=Minute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Rectangle Grid.Column="4" 
+                   Grid.Row="0" 
+                   Grid.RowSpan="2" 
+                   Fill="White"/>
+        <TextBlock x:Name="TbMinuteCaption" 
+                   Grid.Column="4" 
+                   Grid.Row="0" 
+                   Grid.RowSpan="2" 
+                   Text="분" 
+                   VerticalAlignment="Center" 
+                   TextAlignment="Center"
+                   FontSize="{Binding Path=FontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button x:Name="BtnMinuteUp" 
+                Grid.Column="5" 
+                Grid.Row="0" 
+                Command="{Binding MinuteUpCommand}">
+            <Polygon Width="25" 
+                     Height="15"
+                     Fill="Red" 
+                     Stroke="Red" 
+                     StrokeThickness="1" 
+                     Points="{Binding MinuteUpPoint}"/>
+        </Button>
+        <Button x:Name="BtnMinuteDown" 
+                Grid.Column="5" 
+                Grid.Row="1" 
+                Command="{Binding MinuteDownCommand}">
+            <Polygon Width="25" 
+                     Height="15"
+                     Fill="Red" 
+                     Stroke="Red" 
+                     StrokeThickness="1" 
+                     Points="{Binding MinuteDownPoint}"/>
+        </Button>
+    </Grid>
+</UserControl>

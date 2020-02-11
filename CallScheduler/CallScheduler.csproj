@@ -78,6 +78,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Base\CommandBehavior.cs" />
     <Compile Include="Global\DateTimeConverter.cs" />
     <Compile Include="Global\TextToGeometryConverter.cs" />
     <Compile Include="Global\VisibilityConverter.cs" />

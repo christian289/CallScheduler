@@ -1,0 +1,30 @@
+﻿<Application x:Class="CallSchedulerCore.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:CallSchedulerCore"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <Style TargetType="Label" x:Key="TargetLabel">
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+
+        <Style TargetType="TextBox" x:Key="CenterAlignTextBox">
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="TextBox" x:Key="TargetTextBox" BasedOn="{StaticResource CenterAlignTextBox}">
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+
+        <Style TargetType="TextBox" x:Key="SearchChatRoomTextBox" BasedOn="{StaticResource CenterAlignTextBox}">
+            <Setter Property="FontSize" Value="30"/>
+        </Style>
+    </Application.Resources>
+</Application>

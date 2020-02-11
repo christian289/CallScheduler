@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="UC.DateTimePickerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:UC="clr-namespace:UC"
+             mc:Ignorable="d"
+             Name="DTPUC"
+             d:DesignWidth="200" 
+             Height="220">
+    <UserControl.Resources>
+    </UserControl.Resources>
+    
+    <Grid x:Name="GrdMain">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="30" MinHeight="30" MaxHeight="30"/>
+        </Grid.RowDefinitions>
+        
+        <Viewbox>
+            <Calendar x:Name="ClnrDatePicker" 
+                      Grid.Row="0"
+                      SelectedDate="{Binding SelectedDate}"/>
+        </Viewbox>
+        <UC:DateSpinControl x:Name="SpDateController" 
+                            Grid.Row="1"
+                            Width="200" 
+                            Hour="{Binding Path=DataContext.Hour, ElementName=DTPUC, Mode=TwoWay}" 
+                            Minute="{Binding Path=DataContext.Minute, ElementName=DTPUC, Mode=TwoWay}"
+                            FontSize="{Binding Path=DataContext.FontSize, ElementName=DTPUC, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+    </Grid>
+</UserControl>

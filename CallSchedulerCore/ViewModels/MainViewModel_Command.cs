@@ -1,19 +1,17 @@
-﻿using CallScheduler.Base;
-using CallScheduler.Global;
-using CallScheduler.Models;
+﻿using CallSchedulerCore.Base;
+using CallSchedulerCore.Global;
+using CallSchedulerCore.Models;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace CallScheduler.ViewModels
+namespace CallSchedulerCore.ViewModels
 {
     public partial class MainViewModel
     {
